@@ -24,7 +24,7 @@
 
 ### 安装 ###
 
-* `git clone https://github.com/shengl-php/admin_api_with_laravel.git projectname`
+* `git clone https://github.com/bugsheng/admin_api_with_laravel.git projectname`
 * `cd projectname`
 * `composer install`
 * `php artisan key:generate`
