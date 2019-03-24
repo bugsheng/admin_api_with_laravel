@@ -25,7 +25,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
     //授权登录后才可访问的接口
     Route::middleware('auth:adminApi')->group(function () {
 
-        Route::get('test', function () {
+        Route::get('login_test', function () {
             echo 'v1/test';
         });
 
