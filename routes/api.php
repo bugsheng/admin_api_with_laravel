@@ -13,6 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:adminApi')->get('/user', function (Request $request) {
-    return $request->user();
+/**
+ * @version v1
+ */
+Route::namespace('Api')->prefix('v1')->group(function () {
+
+    Route::get('test', function () {
+        echo 'v1/test';
+    });
+
+    //授权登录后才可访问的接口
+    Route::middleware('auth:adminApi')->group(function () {
+
+        Route::get('test', function () {
+            echo 'v1/test';
+        });
+
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+
+    });
+
 });
