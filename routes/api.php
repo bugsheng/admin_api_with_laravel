@@ -16,11 +16,14 @@ use Illuminate\Http\Request;
 /**
  * @version v1
  */
-Route::namespace('Api')->prefix('v1')->group(function () {
+Route::prefix('v1')->group(function () {
 
     Route::get('test', function () {
-        echo 'v1/test';
+        $temp = new \App\Repositories\AuthRepository(new \App\Models\User());
+        dd($temp->findForPassport('admin'));
     });
+
+    Route::post('login', 'AuthController@login')->name('login');
 
     //授权登录后才可访问的接口
     Route::middleware('auth:adminApi')->group(function () {

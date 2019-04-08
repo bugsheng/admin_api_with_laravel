@@ -8,12 +8,11 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
+use App\Http\Requests\LoginRequest;
+use App\Services\AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * 鉴权控制器
@@ -22,30 +21,53 @@ use Illuminate\Support\Facades\Hash;
  */
 class AuthController extends Controller
 {
-
     use AuthenticatesUsers;
 
     /**
-     * 登录
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @var AuthService
      */
-    public function login(Request $request)
+    protected $authService;
+
+    /**
+     * AuthController constructor.
+     * @param AuthService $authService
+     */
+    public function __construct(AuthService $authService)
     {
+        $this->authService = $authService;
+    }
+
+    /**
+     * 用户名密码登录
+     * @param LoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(LoginRequest $request)
+    {
+        //登录次数过多，禁止登录
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
 
             return $this->failed('您登录的次数过多，无法再登录', FoundationResponse::HTTP_TOO_MANY_REQUESTS);
         }
 
-        $login_name = $request->post('username');
+        //post提交，只获取post中的用户名和密码
+        $login_name     = $request->post('username');
         $login_password = $request->post('password');
 
-        //TODO 验证登录用户及密码
+        $loginResult = $this->authService->login($login_name, $login_password);
 
+        //登录失败，提示信息
+        if(!$loginResult['status']) {
+            return $this->failed($loginResult['message']);
+        }
 
-//        return $this->success(['token' => $tokens]);
+        //登录成功，返回授权数据
+        $result = [
+            'authorization' => $loginResult['data']
+        ];
+
+        return $this->success($result);
 
     }
 
