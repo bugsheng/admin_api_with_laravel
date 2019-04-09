@@ -10,14 +10,14 @@ namespace App\Repositories;
 
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Repositories\Interfaces\AuthInterface;
 
 /**
  * 鉴权查询
  * Class AuthRepository
  * @package App\Repositories
  */
-class AuthRepository
+class AuthRepository implements AuthInterface
 {
 
     /**
@@ -35,25 +35,21 @@ class AuthRepository
     }
 
     /**
-     * 登录查询
+     * 登录用户查询
      * @param $value
-     * @return User|bool
+     * @return bool|mixed
      */
     public function findForPassport($value){
-        try{
-            $user = $this->user->where('username', '=', $value)->orWhere('email', '=', $value)->orWhere('name', '=', $value)->firstOrFail();
-            return $user;
-        }catch (ModelNotFoundException $e){
-            return false;
-        }
+
+        $user = $this->user->findForPassport($value);
+        return $user;
     }
 
     /**
      * 更新记录登录信息
-     * @param User $user
+     * @param $user
      */
     public function putLoginRecord(User $user){
-
         $user->last_login_at = $user->login_at;
         $user->last_login_ip = $user->login_ip;
         $user->login_at = now();
@@ -61,4 +57,5 @@ class AuthRepository
         $user->save();
 
     }
+
 }

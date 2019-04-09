@@ -55,6 +55,11 @@ class User extends Authenticatable
 {
     use Notifiable,HasApiTokens,SoftDeletes;
 
+    //设置日期时间格式
+    public $dateFormat = 'U';
+
+    protected $dates = ['delete_at'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -79,7 +84,7 @@ class User extends Authenticatable
      * @return mixed
      */
     public function findForPassport($username) {
-         return self::orWhere('username', '=', $username)->orWhere('name', '=', $username)->first();
+         return self::where('email', '=', $username)->orWhere('username', '=', $username)->orWhere('name', '=', $username)->first();
     }
 
     /*

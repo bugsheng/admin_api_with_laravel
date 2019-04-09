@@ -10,7 +10,7 @@ namespace App\Services;
 
 
 use App\Events\Logout;
-use App\Repositories\AuthRepository;
+use App\Repositories\Interfaces\AuthInterface as AuthRepository;
 use App\Traits\ProxyTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;

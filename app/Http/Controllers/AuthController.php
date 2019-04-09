@@ -12,7 +12,6 @@ use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * 鉴权控制器
@@ -55,6 +54,7 @@ class AuthController extends Controller
         $login_name     = $request->post('username');
         $login_password = $request->post('password');
 
+        //处理登录
         $loginResult = $this->authService->login($login_name, $login_password);
 
         //登录失败，提示信息
@@ -79,7 +79,7 @@ class AuthController extends Controller
     public function logout()
     {
 
-        $this->authService->logout();
+        $result = $this->authService->logout();
 
         return $this->message('ok');
     }

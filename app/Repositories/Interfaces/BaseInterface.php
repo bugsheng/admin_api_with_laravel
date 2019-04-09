@@ -6,10 +6,14 @@
  * Time: 16:52
  */
 
-namespace App\Repositories;
+namespace App\Repositories\Interfaces;
 
-
-interface RepositoryInterface
+/**
+ * 基础资源操作接口
+ * Interface BaseInterface
+ * @package App\Repositories\Interfaces
+ */
+interface BaseInterface
 {
 
     /**
@@ -47,9 +51,10 @@ interface RepositoryInterface
     /**
      * 删除数据
      * @param $id
+     * @param bool $withTrash
      * @return mixed
      */
-    public function delete($id);
+    public function delete($id,$withTrash = false);
 
     /**
      * 根据主键id获取指定记录
