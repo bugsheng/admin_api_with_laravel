@@ -38,7 +38,7 @@ class AuthController extends Controller
     }
 
     /**
-     * 用户名密码登录
+     * 用户登录
      * @param LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -72,15 +72,14 @@ class AuthController extends Controller
     }
 
     /**
-     * 退出登录
+     * 用户登出
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function logout()
     {
-        if (Auth::check()) {
 
-            //TODO 退出登录的移除token操作
-        }
+        $this->authService->logout();
 
         return $this->message('ok');
     }

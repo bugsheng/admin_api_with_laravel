@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Login;
 
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Events\RefreshTokenCreated;
@@ -35,7 +33,7 @@ class PruneOldTokens
     {
         Log::info('event_refreshToken: '.json_encode($event));
         DB::table('oauth_refresh_tokens')
-            ->where('access_token_id', '<>', $event->accessTokenId)
+            ->where('access_token_id', '!=', $event->accessTokenId)
             ->where('revoked', '=', 0)
             ->delete();
     }

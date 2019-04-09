@@ -9,9 +9,11 @@
 namespace App\Services;
 
 
+use App\Events\Logout;
 use App\Repositories\AuthRepository;
 use App\Traits\ProxyTrait;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -72,9 +74,18 @@ class AuthService extends BaseService
      * @return array
      */
     public function logout(){
+
         if (Auth::guard(self::GUARD_TYPE)->check()) {
-            Auth::guard(self::GUARD_TYPE)->user()->token()->revoke();
-            Auth::guard(self::GUARD_TYPE)->user()->token()->delete();
+
+            $currentUser = Auth::guard(self::GUARD_TYPE)->user();
+
+            //触发退出登录事件
+            Event::dispatch(new Logout(
+                $currentUser->token()->id,
+                $currentUser->id,
+                $currentUser->token()->client_id
+            ));
+
         }
 
         return $this->baseSucceed();

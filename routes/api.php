@@ -32,6 +32,8 @@ Route::prefix('v1')->group(function () {
             echo 'v1/test';
         });
 
+        Route::post('logout', 'AuthController@logout')->name('logout');
+
         Route::get('/user', function (Request $request) {
             return $request->user();
         });

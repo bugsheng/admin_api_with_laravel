@@ -1,10 +1,7 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Login;
 
-use Carbon\Carbon;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Events\AccessTokenCreated;

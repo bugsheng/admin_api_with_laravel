@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use App\Listeners\PruneOldTokens;
-use App\Listeners\RevokeOldTokens;
+use App\Events\Logout;
+use App\Listeners\Logout\PruneCurrentToken;
+use App\Listeners\Login\PruneOldTokens;
+use App\Listeners\Logout\RevokeCurrentToken;
+use App\Listeners\Login\RevokeOldTokens;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,12 +26,18 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
 
+        //登录成功后的鉴权监听，移除旧token和refreshToken
         AccessTokenCreated::class => [
           RevokeOldTokens::class
         ],
-
         RefreshTokenCreated::class => [
            PruneOldTokens::class
+        ],
+
+        //退出登录事件监听，移除当前用户使用的token和refreshToken
+        Logout::class => [
+            RevokeCurrentToken::class,
+            PruneCurrentToken::class
         ]
 
     ];

@@ -79,7 +79,7 @@ class User extends Authenticatable
      * @return mixed
      */
     public function findForPassport($username) {
-         return $this->where('email', '=', $username)->orWhere('username', '=', $username)->orWhere('name', '=', $username)->first();
+         return self::orWhere('username', '=', $username)->orWhere('name', '=', $username)->first();
     }
 
     /*
