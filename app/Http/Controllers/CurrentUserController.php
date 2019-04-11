@@ -9,8 +9,9 @@
 namespace App\Http\Controllers;
 
 
-use App\Services\CurrentUserService;
-use Illuminate\Http\Request;
+use App\Http\Requests\CurrentUserRequests\UpdateInfoRequest;
+use App\Http\Requests\CurrentUserRequests\UpdateLoginPasswordRequest;
+use App\Services\Interfaces\CurrentUserInterface as CurrentUserService;
 
 /**
  * 用户个人信息操作相关
@@ -53,23 +54,46 @@ class CurrentUserController extends Controller
     //获取用户权限
     public function getPermissions(){}
 
-    //更新用户基础信息
-    public function updateInfo(Request $request){
+    /**
+     * 更新用户基础信息
+     * @param UpdateInfoRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateInfo(UpdateInfoRequest $request){
 
+        //获取有效参数
         $require_data = $request->only(['name','email']);
 
+        //更新信息
         $result = $this->currentUserService->updateInfo($require_data);
 
         if(!$result['status']){
             return $this->failed($result['message']);
         }
 
-        return $this->message('更新用户信息操作成功');
+        return $this->message('更新信息操作成功');
 
     }
 
-    //修改用户密码
-    public function updatePassword(){}
+    /**
+     * 修改用户密码
+     * @param UpdateLoginPasswordRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updatePassword(UpdateLoginPasswordRequest $request){
+
+        //获取有效参数
+        $require_data = $request->only(['old_password','password']);
+
+        //更新密码
+        $result = $this->currentUserService->updatePassword($require_data['old_password'],$require_data['password']);
+
+        if(!$result['status']){
+            return $this->failed($result['message']);
+        }
+
+        return $this->message('修改登录密码操作成功');
+    }
 
     //修改用户头像
     public function updateAvatar(){}

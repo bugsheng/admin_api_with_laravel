@@ -28,11 +28,14 @@ Route::prefix('v1')->group(function () {
         dd($test([1]));
     });
 
-    /*登录*/
+    /*登录鉴权*/
     Route::post('login', 'AuthController@login');
 
+    /*刷新token*/
+    Route::post('refresh_token','AuthController@refreshToken');
+
     //授权登录后才可访问的接口
-    Route::middleware('auth:adminApi')->group(function () {
+    Route::middleware('auth:api')->group(function () {
 
         Route::get('login_test', function () {
             echo 'v1/test';
@@ -46,9 +49,14 @@ Route::prefix('v1')->group(function () {
 
         Route::get('current_permissions', 'CurrentUserController@getPermissions');
 
+        /*更新用户信息*/
         Route::put('update_current_user_info', 'CurrentUserController@updateInfo');
-        Route::put('update_current_user_avatar', 'CurrentUserController@updateAvatar');
+
+        /*更新用户登录密码*/
         Route::put('update_current_user_password', 'CurrentUserController@updatePassword');
+
+        Route::put('update_current_user_avatar', 'CurrentUserController@updateAvatar');
+
 
         Route::get('/user', function (Request $request) {
             return $request->user();

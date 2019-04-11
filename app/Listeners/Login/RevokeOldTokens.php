@@ -2,8 +2,7 @@
 
 namespace App\Listeners\Login;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use DB;
 use Laravel\Passport\Events\AccessTokenCreated;
 
 /**
@@ -31,14 +30,12 @@ class RevokeOldTokens
      */
     public function handle(AccessTokenCreated $event)
     {
-
-        Log::info('event_accessToken: '.json_encode($event));
+        //登录成功删除该用户的其他token
         DB::table('oauth_access_tokens')
             ->where('id', '!=', $event->tokenId)
             ->where('user_id', '=', $event->userId)
             ->where('client_id', '=', $event->clientId)
             ->where('created_at', '<', now()->toDateTimeString())
-            ->where('revoked', '=', 0)
             ->delete();
     }
 }

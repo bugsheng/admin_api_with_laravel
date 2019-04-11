@@ -11,22 +11,24 @@ namespace App\Services;
 
 use App\Events\Logout;
 use App\Repositories\Interfaces\AuthInterface as AuthRepository;
+use App\Services\Interfaces\AuthInterface;
 use App\Traits\ProxyTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Hash;
+use Auth;
+use Event;
+use Hash;
 
 /**
  * 登录登出鉴权服务
  * Class AuthService
  * @package App\Services
  */
-class AuthService extends BaseService
+class AuthService extends BaseService implements AuthInterface
 {
     use ProxyTrait;
 
     const LOGIN_ERROR = '用户名或密码错误';
-    const GUARD_TYPE = 'adminApi';
+    const REFRESH_TOKEN_ERROR = '登录失效，请重新登录';
+    const GUARD_TYPE = 'api';
 
     protected $authRepository;
 
@@ -70,25 +72,38 @@ class AuthService extends BaseService
     }
 
     /**
+     * 刷新令牌
+     * @param $refresh_token
+     * @return array|mixed
+     */
+    public function refreshToken($refresh_token)
+    {
+
+        $tokens = $this->getRefreshToken($refresh_token);
+
+        if($tokens == false){
+            return $this->baseFailed(self::REFRESH_TOKEN_ERROR);
+        }
+
+        //返回登录授权信息
+        return $this->baseSucceed($tokens);
+    }
+
+    /**
      * 退出登录
-     * @return array
      */
     public function logout(){
 
-        if (Auth::guard(self::GUARD_TYPE)->check()) {
+        if (Auth::check()) {
 
-            $currentUser = Auth::guard(self::GUARD_TYPE)->user();
+            $currentUser = Auth::user();
 
             //触发退出登录事件
             Event::dispatch(new Logout(
-                $currentUser->token()->id,
-                $currentUser->id,
-                $currentUser->token()->client_id
+                $currentUser->token()->id
             ));
 
         }
-
-        return $this->baseSucceed();
     }
 
     /**

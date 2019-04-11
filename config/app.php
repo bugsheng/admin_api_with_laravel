@@ -165,6 +165,8 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\ServiceServiceProvider::class,
+        App\Providers\ValidateServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
 
         /*

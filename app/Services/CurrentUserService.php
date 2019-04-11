@@ -8,21 +8,35 @@
 
 namespace App\Services;
 
-
 use App\Repositories\Interfaces\UserInterface as UserRepository;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Services\Interfaces\CurrentUserInterface;
+use App\Validates\Interfaces\CurrentUser\UpdateInfoInterface as UpdateInfoValidate;
+use Auth;
+use Hash;
 
-class CurrentUserService extends BaseService
+class CurrentUserService extends BaseService implements CurrentUserInterface
 {
 
-    const LOGIN_ERROR = '用户名或密码错误';
-    const GUARD_TYPE = 'adminApi';
+    protected $user;
 
+    /**
+     * 用户信息修改验证类
+     * @var UpdateInfoValidate
+     */
+    protected $updateInfoValidate;
+
+    /**
+     * 用户数据操作仓库类
+     * @var UserRepository
+     */
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UpdateInfoValidate $updateInfoValidate, UserRepository $userRepository)
     {
+        $this->user = Auth::user();
+
+        $this->updateInfoValidate = $updateInfoValidate;
+
         $this->userRepository = $userRepository;
     }
 
@@ -31,15 +45,12 @@ class CurrentUserService extends BaseService
      * @return array
      */
     public function getUserInfo(){
-
-        $user = Auth::user();
-
         $data = [
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => $user->avatar,
-            'last_login_at' => $user->last_login_at,
-            'last_login_ip' => $user->last_login_ip
+            'name' => $this->user->name,
+            'email' => $this->user->email,
+            'avatar' => $this->user->avatar,
+            'last_login_at' => $this->user->last_login_at,
+            'last_login_ip' => $this->user->last_login_ip
         ];
 
         return $this->baseSucceed($data);
@@ -47,13 +58,22 @@ class CurrentUserService extends BaseService
 
     public function getUserPermissions(){}
 
-    public function updateInfo($data = []){
+    /**
+     * 更新用户基础信息
+     * @param array $data
+     * @return array
+     */
+    public function updateInfo(array $data){
 
-        $user = Auth::user();
+        //数据验证
+        $this->updateInfoValidate->setId($this->user->id);
+        $result = $this->updateInfoValidate->updateInfo($data);
+        if($result['status'] === false){
+            return $this->baseFailed($result['message']);
+        }
 
-        //校验更新信息数据
-
-        $result = $this->userRepository->update($data,$user);
+        //数据存储更新
+        $result = $this->userRepository->update($data,$this->user);
         if($result === false){
             return $this->baseFailed('更新用户数据失败');
         }
@@ -62,19 +82,35 @@ class CurrentUserService extends BaseService
 
     }
 
-    public function updatePassword($password){
-        $user = Auth::user();
+    public function updatePassword($old_password, $new_password){
 
+        //检查旧密码是否正确
+        $is_correct_password = self::checkPassword($this->user, $old_password);
+        if(!$is_correct_password){
+            return $this->baseFailed('原密码不正确');
+        }
+
+        //更新密码,数据存储
         $data = [
-            'password' => Hash::make($password)
+           'password' => Hash::make($new_password)
         ];
-
-        $result = $this->userRepository->update($data,$user);
+        $result = $this->userRepository->update($data,$this->user);
         if($result === false){
             return $this->baseFailed('修改密码失败');
         }
 
         return $this->baseSucceed();
+    }
+
+    /**
+     * 检查登录密码
+     * @param $user
+     * @param $password
+     * @return bool
+     */
+    protected function checkPassword($user, $password) :bool
+    {
+        return Hash::check($password, $user->password);
     }
 
     public function updateAvatar(){}

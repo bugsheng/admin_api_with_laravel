@@ -9,8 +9,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
-use App\Services\AuthService;
+use App\Services\Interfaces\AuthInterface as AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 
 /**
@@ -72,6 +73,31 @@ class AuthController extends Controller
     }
 
     /**
+     * 刷新令牌
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refreshToken(Request $request){
+
+        $refresh_token = $request->post('refresh_token','');
+
+        //处理刷新token
+        $refreshResult = $this->authService->refreshToken($refresh_token);
+
+        //刷新失败，提示信息
+        if(!$refreshResult['status']) {
+            return $this->failed($refreshResult['message']);
+        }
+
+        //刷新成功，返回新的授权数据
+        $result = [
+            'authorization' => $refreshResult['data']
+        ];
+
+        return $this->success($result);
+    }
+
+    /**
      * 用户登出
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
@@ -79,7 +105,7 @@ class AuthController extends Controller
     public function logout()
     {
 
-        $result = $this->authService->logout();
+        $this->authService->logout();
 
         return $this->message('ok');
     }

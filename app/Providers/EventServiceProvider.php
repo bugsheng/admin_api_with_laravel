@@ -2,17 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\Logout;
-use App\Listeners\Logout\PruneCurrentToken;
-use App\Listeners\Login\PruneOldTokens;
-use App\Listeners\Logout\RevokeCurrentToken;
-use App\Listeners\Login\RevokeOldTokens;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Laravel\Passport\Events\AccessTokenCreated;
-use Laravel\Passport\Events\RefreshTokenCreated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,24 +12,23 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
+        'Illuminate\Auth\Events\Registered' => [
+            'Illuminate\Auth\Listeners\SendEmailVerificationNotification'
         ],
 
         //登录成功后的鉴权监听，移除旧token和refreshToken
-        AccessTokenCreated::class => [
-          RevokeOldTokens::class
+        'Laravel\Passport\Events\AccessTokenCreated' => [
+            'App\Listeners\Login\RevokeOldTokens'
         ],
-        RefreshTokenCreated::class => [
-           PruneOldTokens::class
-        ],
+//        'Laravel\Passport\Events\RefreshTokenCreated' => [
+//            'App\Listeners\Login\PruneOldTokens'
+//        ],
 
         //退出登录事件监听，移除当前用户使用的token和refreshToken
-        Logout::class => [
-            RevokeCurrentToken::class,
-            PruneCurrentToken::class
-        ]
-
+        'App\Events\Logout' => [
+            'App\Listeners\Logout\RevokeCurrentToken',
+            'App\Listeners\Logout\PruneCurrentToken'
+        ],
     ];
 
     /**

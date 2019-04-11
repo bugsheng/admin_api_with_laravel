@@ -55,9 +55,6 @@ class User extends Authenticatable
 {
     use Notifiable,HasApiTokens,SoftDeletes;
 
-    //设置日期时间格式
-    public $dateFormat = 'U';
-
     protected $dates = ['delete_at'];
 
     /**

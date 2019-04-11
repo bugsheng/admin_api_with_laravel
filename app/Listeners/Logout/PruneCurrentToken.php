@@ -3,7 +3,7 @@
 namespace App\Listeners\Logout;
 
 use App\Events\Logout;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class PruneCurrentToken
 {
@@ -25,6 +25,7 @@ class PruneCurrentToken
      */
     public function handle(Logout $event)
     {
-        DB::table('oauth_refresh_tokens')->where('access_token_id', '=', $event->tokenId)->delete();
+        //退出登录成功，失效token
+        DB::table('oauth_refresh_tokens')->where('access_token_id', '=', $event->tokenId) ->delete();
     }
 }

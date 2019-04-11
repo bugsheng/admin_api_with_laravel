@@ -2,8 +2,7 @@
 
 namespace App\Listeners\Login;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use DB;
 use Laravel\Passport\Events\RefreshTokenCreated;
 
 /**
@@ -31,10 +30,9 @@ class PruneOldTokens
      */
     public function handle(RefreshTokenCreated $event)
     {
-        Log::info('event_refreshToken: '.json_encode($event));
+        //登录成功删除其他refreshToken， 该逻辑好像有点问题，会把其他所有人的refresh_token都删除了
         DB::table('oauth_refresh_tokens')
             ->where('access_token_id', '!=', $event->accessTokenId)
-            ->where('revoked', '=', 0)
             ->delete();
     }
 }

@@ -728,7 +728,7 @@ if(!function_exists('hasArrayRepeat')){
      * 作用：根据二维数组中的部分键值判断二维数组中是否有重复值
      * @param array $arr  目标数组
      * @param array $keys  要进行判断的键值组合的数组
-     * @return boolean 是有重复 true有重复 false无重复
+     * @return bool 是有重复 true有重复 false无重复
      */
     function hasArrayRepeat($arr = [],$keys = []) {
         $unique_arr = array();
@@ -744,5 +744,18 @@ if(!function_exists('hasArrayRepeat')){
             }
         }
         return false;
+    }
+}
+
+if(!function_exists('is_assoc')){
+    /**
+     * 作用：检测数组是否为索引数组。
+     * @param array $arr 传入的数组
+     * @return bool
+     */
+    function is_assoc(array $arr)
+    {
+//        return array_keys($arr) !== range(0, count($arr) - 1);
+        return (bool)count(array_filter(array_keys($arr), 'is_string'));
     }
 }
