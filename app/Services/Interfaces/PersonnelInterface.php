@@ -9,7 +9,7 @@
 namespace App\Services\Interfaces;
 
 
-interface CurrentUserInterface
+interface PersonnelInterface
 {
 
     /**

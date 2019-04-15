@@ -9,12 +9,12 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\UserInterface as UserRepository;
-use App\Services\Interfaces\CurrentUserInterface;
+use App\Services\Interfaces\PersonnelInterface;
 use App\Validates\Interfaces\CurrentUser\UpdateInfoInterface as UpdateInfoValidate;
 use Auth;
 use Hash;
 
-class CurrentUserService extends BaseService implements CurrentUserInterface
+class PersonnelService extends BaseService implements PersonnelInterface
 {
 
     protected $user;
@@ -82,6 +82,12 @@ class CurrentUserService extends BaseService implements CurrentUserInterface
 
     }
 
+    /**
+     * 修改个人登录密码
+     * @param $old_password
+     * @param $new_password
+     * @return array
+     */
     public function updatePassword($old_password, $new_password){
 
         //检查旧密码是否正确

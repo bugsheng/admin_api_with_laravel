@@ -45,17 +45,17 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', 'AuthController@logout');
 
         /*获取当前登录用户信息*/
-        Route::get('current_user','CurrentUserController@info');
+        Route::get('current_user','PersonnelController@info');
 
-        Route::get('current_permissions', 'CurrentUserController@getPermissions');
+        Route::get('current_permissions', 'PersonnelController@getPermissions');
 
         /*更新用户信息*/
-        Route::put('update_current_user_info', 'CurrentUserController@updateInfo');
+        Route::put('update_current_user_info', 'PersonnelController@updateInfo');
 
         /*更新用户登录密码*/
-        Route::put('update_current_user_password', 'CurrentUserController@updatePassword');
+        Route::put('update_current_user_password', 'PersonnelController@updatePassword');
 
-        Route::put('update_current_user_avatar', 'CurrentUserController@updateAvatar');
+        Route::put('update_current_user_avatar', 'PersonnelController@updateAvatar');
 
 
         Route::get('/user', function (Request $request) {

@@ -9,30 +9,30 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Requests\CurrentUserRequests\UpdateInfoRequest;
-use App\Http\Requests\CurrentUserRequests\UpdateLoginPasswordRequest;
-use App\Services\Interfaces\CurrentUserInterface as CurrentUserService;
+use App\Http\Requests\PersonnelRequests\UpdateInfoRequest;
+use App\Http\Requests\PersonnelRequests\UpdateLoginPasswordRequest;
+use App\Services\Interfaces\PersonnelInterface as PersonnelService;
 
 /**
  * 用户个人信息操作相关
  * Class CurrentUserController
  * @package App\Http\Controllers
  */
-class CurrentUserController extends Controller
+class PersonnelController extends Controller
 {
 
     /**
-     * @var CurrentUserService
+     * @var PersonnelService
      */
-    protected $currentUserService;
+    protected $personnelService;
 
     /**
      * CurrentUserController constructor.
-     * @param CurrentUserService $currentUserService
+     * @param PersonnelService $personnelService
      */
-    public function __construct(CurrentUserService $currentUserService)
+    public function __construct(PersonnelService $personnelService)
     {
-        $this->currentUserService = $currentUserService;
+        $this->personnelService = $personnelService;
     }
 
     /**
@@ -41,10 +41,10 @@ class CurrentUserController extends Controller
      */
     public function info(){
 
-        $result = $this->currentUserService->getUserInfo();
+        $result = $this->personnelService->getUserInfo();
 
         $data = [
-            'currentUser' => $result['data']
+            'personnel' => $result['data']
         ];
 
         return $this->success($data);
@@ -65,7 +65,7 @@ class CurrentUserController extends Controller
         $require_data = $request->only(['name','email']);
 
         //更新信息
-        $result = $this->currentUserService->updateInfo($require_data);
+        $result = $this->personnelService->updateInfo($require_data);
 
         if(!$result['status']){
             return $this->failed($result['message']);
@@ -86,7 +86,7 @@ class CurrentUserController extends Controller
         $require_data = $request->only(['old_password','password']);
 
         //更新密码
-        $result = $this->currentUserService->updatePassword($require_data['old_password'],$require_data['password']);
+        $result = $this->personnelService->updatePassword($require_data['old_password'],$require_data['password']);
 
         if(!$result['status']){
             return $this->failed($result['message']);
