@@ -15,6 +15,7 @@ class ServiceServiceProvider extends ServiceProvider
     {
         $this->app->bind('App\Services\Interfaces\AuthInterface', 'App\Services\AuthService');
         $this->app->bind('App\Services\Interfaces\PersonnelInterface', 'App\Services\PersonnelService');
+        $this->app->bind('App\Services\Interfaces\StorageInterface', 'App\Services\StorageService');
     }
 
     /**

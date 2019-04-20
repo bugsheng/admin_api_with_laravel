@@ -23,23 +23,23 @@ trait ProxyTrait
 
     /**
      * 授权获取token
-     * @param string $guard
+     * @param string $provider
      * @param string $login_name
      * @param string $login_password
      * @return bool|mixed
      */
-    public function authenticate($guard = '',$login_name, $login_password)
+    public function authenticate($provider = '',$login_name, $login_password)
     {
         $client = new Client();
 
         try {
             $url = request()->root() . '/api/oauth/token';
 
-            if ($guard) {
+            if ($provider) {
                 $params = array_merge(config('passport.proxy'), [
                     'username' => $login_name,
                     'password' => $login_password,
-                    'provider' => $guard
+                    'provider' => $provider
                 ]);
             } else {
                 $params = array_merge(config('passport.proxy'), [

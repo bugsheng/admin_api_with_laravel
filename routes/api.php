@@ -57,11 +57,17 @@ Route::prefix('v1')->group(function () {
 
         Route::put('update_current_user_avatar', 'PersonnelController@updateAvatar');
 
+        /* 获取文件上传客户端信息 */
+        Route::get('storage_client', 'StorageController@getToken');
+        /* 存储本地文件 */
+        Route::post('storage_local_file', 'StorageController@storageLocalFile')->name('storage_local_file');
 
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
 
     });
+
+
 
 });

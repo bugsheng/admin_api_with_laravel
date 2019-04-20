@@ -58,7 +58,7 @@ class AuthService extends BaseService implements AuthInterface
         }
 
         //获取OAuth2.0授权
-        $tokens = $this->authenticate(self::GUARD_TYPE, $login_name, $login_password);
+        $tokens = $this->authenticate(config('auth.guards.'.self::GUARD_TYPE.'.provider'), $login_name, $login_password);
         if($tokens == false){
             return $this->baseFailed(self::LOGIN_ERROR);
         }
