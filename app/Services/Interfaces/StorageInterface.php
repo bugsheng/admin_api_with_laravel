@@ -8,13 +8,19 @@
 
 namespace App\Services\Interfaces;
 
+use App\Services\Interfaces\ExtendFileStorage\AliOssStorageInterface;
 use Illuminate\Http\UploadedFile;
 
-interface StorageInterface
+interface StorageInterface extends AliOssStorageInterface
 {
 
     public function getStorageToken($type);
 
+    /**
+     * @param string $storage_path
+     * @param UploadedFile $file
+     * @return mixed
+     */
     public function storeLocalFile(string $storage_path, UploadedFile $file);
 
     public function storeLocalFiles(string $storage_path, array $files);

@@ -22,7 +22,7 @@ interface PersonnelInterface
 
     public function updateInfo(array $data);
 
-    public function updatePassword($old_password, $new_password);
+    public function updatePassword(string $old_password, string $new_password);
 
     public function updateAvatar();
 

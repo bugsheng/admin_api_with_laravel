@@ -62,4 +62,26 @@ class StorageController extends Controller
         ];
         return $this->success($data);
     }
+
+    //存储本地文件
+    public function storageAliOssFile(StorageLocalFileRequest $request){
+
+        $path = $request->get('file_path','');
+        $file = $request->file('file');
+
+        if(is_array($file)){
+            $result = $this->storageService->storeLocalFiles($path, $file);
+        }else{
+            $result = $this->storageService->storeAliOssFile($path, $file);
+        }
+
+        if(!$result['status']){
+            return $this->failed('文件上传失败');
+        }
+
+        $data = [
+            'file_info' => $result['data']
+        ];
+        return $this->success($data);
+    }
 }

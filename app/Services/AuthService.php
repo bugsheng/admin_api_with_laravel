@@ -39,11 +39,11 @@ class AuthService extends BaseService implements AuthInterface
 
     /**
      * 登录验证及授权服务
-     * @param $login_name
-     * @param $login_password
+     * @param string $login_name
+     * @param string $login_password
      * @return array
      */
-    public function login($login_name, $login_password){
+    public function login(string $login_name,string $login_password){
 
         //检查用户是否存在
         $user = $this->authRepository->findForPassport($login_name);
@@ -73,10 +73,10 @@ class AuthService extends BaseService implements AuthInterface
 
     /**
      * 刷新令牌
-     * @param $refresh_token
+     * @param string $refresh_token
      * @return array|mixed
      */
-    public function refreshToken($refresh_token)
+    public function refreshToken(string $refresh_token)
     {
 
         $tokens = $this->getRefreshToken($refresh_token);

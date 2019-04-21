@@ -64,6 +64,18 @@ return [
             'url' => env('AWS_URL'),
         ],
 
+        'ali_oss' => [
+            'driver' => 'ali_oss',
+            'access_key_id' => 'LTAIPjFI53jdaPWP',//从OSS获得的AccessKeyId
+            'access_key_secret' => 'P5BDI1w0vhhIRTQzeXFw8h9BfY6BoP',//从OSS获得的AccessKeySecret
+            'bucket' => 'bugsheng-dev',//OSS中设置的空间bucket
+            'endpoint' => 'oss-cn-hangzhou.aliyuncs.com',//您选定的OSS数据中心访问域名，例如oss-cn-hangzhou.aliyuncs.com
+            'isCName' => true,//<true|false>是否对Bucket做了域名绑定，并且Endpoint参数填写的是自己的域名
+            'cdn_domain' => 'oss-bugsheng-dev.bugsheng.com',// 如果isCName为true, getUrl会判断cdnDomain是否设定来决定返回的url，如果cdnDomain未设置，则使用endpoint来生成url，否则使用cdn
+            'endpoint_internal' => 'oss-cn-hangzhou-internal.aliyuncs.com',//内网地址
+            'ssl' => false,//<true|false>是否使用ssl 即链接是否使用https
+
+        ]
     ],
 
 ];

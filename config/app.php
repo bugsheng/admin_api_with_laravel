@@ -168,6 +168,7 @@ return [
         App\Providers\ServiceServiceProvider::class,
         App\Providers\ValidateServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
+        App\Providers\ExtendFileStorage\AliOssServiceProvider::class,
 
         /*
          * Application Service Providers...

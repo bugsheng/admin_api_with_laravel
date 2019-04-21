@@ -84,11 +84,11 @@ class PersonnelService extends BaseService implements PersonnelInterface
 
     /**
      * 修改个人登录密码
-     * @param $old_password
-     * @param $new_password
+     * @param string $old_password
+     * @param string $new_password
      * @return array
      */
-    public function updatePassword($old_password, $new_password){
+    public function updatePassword(string $old_password, string $new_password){
 
         //检查旧密码是否正确
         $is_correct_password = self::checkPassword($this->user, $old_password);
