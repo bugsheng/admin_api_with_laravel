@@ -60,7 +60,11 @@ Route::prefix('v1')->group(function () {
         /* 获取文件上传客户端信息 */
         Route::get('storage_client', 'StorageController@getToken');
         /* 存储本地文件 */
-        Route::post('storage_local_file', 'StorageController@storageLocalFile')->name('storage_local_file');
+        Route::post('store_local_file', 'StorageController@storeLocalFile')->name('store_local_file');
+        /* 存储阿里OSS文件 */
+        Route::post('store_ali_oss_file', 'StorageController@storeAliOssFile')->name('store_ali_oss_file');
+        /* 存储七牛文件 */
+        Route::post('store_qiniu_file', 'StorageController@storeQiniuFile')->name('store_qiniu_file');
 
         Route::get('/user', function (Request $request) {
             return $request->user();

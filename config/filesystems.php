@@ -75,6 +75,16 @@ return [
             'endpoint_internal' => env('ALI_OSS_ENDPOINT_INTERNAL'),//内网地址
             'isCName' => env('ALI_OSS_IS_CNAME', false),//<true|false>是否对Bucket做了域名绑定，并且Endpoint参数填写的是自己的域名
             'ssl' => env('ALI_OSS_SSL', false),//<true|false>是否使用ssl 即链接是否使用https
+        ],
+
+        //七牛配置
+        'qiniu' => [
+            'driver' => 'qiniu',
+            'access_key_id' => env('QINIU_ACCESS_KEY_ID'),//从OSS获得的AccessKeyId
+            'access_key_secret' => env('QINIU_ACCESS_KEY_SECRET'),//从OSS获得的AccessKeySecret
+            'bucket' => env('QINIU_BUCKET'),//OSS中设置的空间bucket
+            'cdn_domain' => env('QINIU_CDN_DOMAIN'),// 如果isCName为true, getUrl会判断cdnDomain是否设定来决定返回的url，如果cdnDomain未设置，则使用endpoint来生成url，否则使用cdn
+            'ssl' => env('QINIU_SSL', false),//<true|false>是否使用ssl 即链接是否使用https
         ]
     ],
 

@@ -169,6 +169,7 @@ return [
         App\Providers\ValidateServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\ExtendFileStorage\AliOssServiceProvider::class,
+        App\Providers\ExtendFileStorage\QiniuServiceProvider::class,
 
         /*
          * Application Service Providers...

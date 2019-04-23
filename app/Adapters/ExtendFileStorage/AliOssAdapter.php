@@ -10,6 +10,7 @@ namespace App\Adapters\ExtendFileStorage;
 
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
@@ -142,7 +143,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $this->client->putObject($this->bucket, $object, $contents, $options);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
         return $this->normalizeResponse($options, $path);
@@ -184,7 +185,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $this->client->uploadFile($this->bucket, $object, $filePath, $options);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
         return $this->normalizeResponse($options, $path);
@@ -255,7 +256,7 @@ class AliOssAdapter extends AbstractAdapter
         try{
             $this->client->copyObject($this->bucket, $object, $this->bucket, $newObject);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
 
@@ -277,7 +278,7 @@ class AliOssAdapter extends AbstractAdapter
             try{
                 $this->client->deleteObject($this->bucket, $object);
             }catch (OssException $e) {
-                Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+                $this->logError(__FUNCTION__, $e);
                 return false;
             }
         }elseif (is_array($path) && $path) {
@@ -285,7 +286,7 @@ class AliOssAdapter extends AbstractAdapter
             try {
                 $this->client->deleteObjects($this->bucket, $path);
             } catch (OssException $e) {
-                Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+                $this->logError(__FUNCTION__, $e);
                 return false;
             }
         }
@@ -303,7 +304,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $dirObjects = $this->listDirObjects($dirname, true);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
 
@@ -317,7 +318,7 @@ class AliOssAdapter extends AbstractAdapter
             try {
                 $this->client->deleteObjects($this->bucket, $objects);
             } catch (OssException $e) {
-                Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+                $this->logError(__FUNCTION__, $e);
                 return false;
             }
 
@@ -326,7 +327,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $this->client->deleteObject($this->bucket, $dirname);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
 
@@ -349,7 +350,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $this->client->createObjectDir($this->bucket, $object, $options);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
 
@@ -371,7 +372,7 @@ class AliOssAdapter extends AbstractAdapter
         try{
             $this->client->putObjectAcl($this->bucket, $object, $acl);
         }catch (OssException $e){
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
 
@@ -458,7 +459,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $objectMeta = $this->client->getObjectMeta($this->bucket, $object);
         } catch (OssException $e) {
-            Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
         return $objectMeta;
@@ -519,7 +520,7 @@ class AliOssAdapter extends AbstractAdapter
         try {
             $acl = $this->client->getObjectAcl($this->bucket, $object);
         } catch (OssException $e) {
-            Log::error($e->getMessage());
+            $this->logError(__FUNCTION__, $e);
             return false;
         }
         if ($acl == OssClient::OSS_ACL_TYPE_PUBLIC_READ ){
@@ -542,18 +543,19 @@ class AliOssAdapter extends AbstractAdapter
     }
 
     /**
-     * 生成临时链接,
+     * 生成临时链接
+     * @DriverFunction
      * @param       $path
      * @param       $expiration
      * @param array $options
      *
      * @return string
      * @throws \OSS\Core\OssException
-     * @author Merdan
+     * @throws FileNotFoundException
      */
     public function getTemporaryUrl($path, $expiration = 600, array $options = []) {
 
-//        if (!$this->has($path)) throw new FileNotFoundException($path.' not found');
+        if (!$this->has($path)) throw new FileNotFoundException($path.' not found');
 
         if($expiration instanceof Carbon){
             $expiration = $expiration->diffInSeconds(Carbon::now());
@@ -668,7 +670,7 @@ class AliOssAdapter extends AbstractAdapter
             try {
                 $listObjectInfo = $this->client->listObjects($this->bucket, $options);
             } catch (OssException $e) {
-                Log::error(__FUNCTION__ . ": FAILED => ".$e->getMessage());
+                $this->logError(__FUNCTION__, $e);
                 throw $e;
             }
             $nextMarker = $listObjectInfo->getNextMarker(); // 得到nextMarker，从上一次listObjects读到的最后一个文件的下一个文件开始继续获取文件列表
@@ -723,5 +725,13 @@ class AliOssAdapter extends AbstractAdapter
         $result['Body'] = $this->client->getObject($this->bucket, $object);
         $result = array_merge($result, ['type' => 'file']);
         return $this->normalizeResponse($result, $path);
+    }
+
+    /**
+     * @param $fun string function name : __FUNCTION__
+     * @param \Exception $e
+     */
+    protected function logError($fun,\Exception $e){
+        Log::error($fun . ": FAILED => ".$e->getMessage());
     }
 }

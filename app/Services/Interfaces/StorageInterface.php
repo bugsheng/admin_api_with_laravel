@@ -10,9 +10,10 @@ namespace App\Services\Interfaces;
 
 use App\Services\Interfaces\ExtendFileStorage\AliOssStorageInterface;
 use App\Services\Interfaces\ExtendFileStorage\LocalPublicStorageInterface;
+use App\Services\Interfaces\ExtendFileStorage\QiniuStorageInterface;
 
-interface StorageInterface extends LocalPublicStorageInterface, AliOssStorageInterface
+interface StorageInterface extends LocalPublicStorageInterface, AliOssStorageInterface, QiniuStorageInterface
 {
-    public function getStorageToken($type);
+    public function getStoreFileToken($type);
 
 }

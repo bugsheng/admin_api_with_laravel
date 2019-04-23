@@ -20,23 +20,33 @@ class StorageService extends BaseService implements StorageInterface
      * @param $type
      * @return array
      */
-    public function getStorageToken($type)
+    public function getStoreFileToken($type)
     {
         $data = [];
         switch ($type){
             case 'local':
                 $data = [
-                    'url' => route('storage_local_file'),
+                    'url' => route('store_local_file'),
                     'type' =>$type
                 ];
                 break;
             case 'public':
                 $data = [
-                    'url' => route('storage_local_file'),
+                    'url' => route('store_local_file'),
                     'type' =>$type
                 ];
                 break;
             case 'ali_oss':
+                $data = [
+                    'url' => route('store_ali_oss_file'),
+                    'type' =>$type
+                ];
+                break;
+            case 'qiniu':
+                $data = [
+                    'url' => route('store_qiniu_file'),
+                    'type' =>$type
+                ];
                 break;
             default:;
         }
@@ -169,11 +179,11 @@ class StorageService extends BaseService implements StorageInterface
     }
 
     /**
-     * 多个文件本地存储
+     * 批量存储上传的文件到阿里云Oss
      * @param string $storage_path
      * @param array $files
      * @param bool $is_public 文件是否公开可见
-     * @return array
+     * @return mixed
      */
     public function storeAliOssFiles(string $storage_path, array $files, bool $is_public = false)
     {
@@ -185,7 +195,7 @@ class StorageService extends BaseService implements StorageInterface
                 //TODO 监听失败删除之前上传成功的线上文件
                 //如果之前有文件上传成功的，删除文件
                 if(count($data)){
-                    self::deleteLocalFiles($storage_path,array_pluck($data,'save_name'));
+                    self::deleteOneDirAliOssFiles($storage_path,array_pluck($data,'save_name'));
                 }
 
                 return $this->baseFailed('文件上传失败');
@@ -240,6 +250,108 @@ class StorageService extends BaseService implements StorageInterface
 
         return $this->baseSucceed();
     }
+
+
+    /**
+     * 存储上传的文件到七牛
+     * @param string $storage_path
+     * @param UploadedFile $file
+     * @param bool $is_public 文件是否公开可见
+     * @return mixed
+     */
+    public function storeQiniuFile(string $storage_path, UploadedFile $file, bool $is_public = false){
+        $filePath = $storage_path.'/'.date('Y_m_d',time());
+
+        $options = ['disk'=>'qiniu', 'visibility' => $is_public ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE];
+
+        $result = $this->storeFile($filePath, $file, $options);
+
+        if($result === false) {
+
+            return $this->baseFailed('文件上传失败');
+        }
+
+        $data = array_merge([
+            'url' => $is_public ? Storage::disk($options['disk'])->url($result['save_path'].'/'.$result['save_name']) : Storage::disk($options['disk'])->temporaryUrl($result['save_path'].'/'.$result['save_name'], now()->addMinutes(60)),
+            'is_public' => $is_public
+        ], $result);
+
+        return $this->baseSucceed($data);
+    }
+
+    /**
+     * 批量存储上传的文件到七牛
+     * @param string $storage_path
+     * @param array $files
+     * @param bool $is_public 文件是否公开可见
+     * @return mixed
+     */
+    public function storeQiniuFiles(string $storage_path, array $files, bool $is_public = false)
+    {
+        $data = [];
+        foreach($files as $file){
+            $result = self::storeQiniuFile($storage_path, $file, $is_public);
+            if($result['status'] == false){
+
+                //TODO 监听失败删除之前上传成功的线上文件
+                //如果之前有文件上传成功的，删除文件
+                if(count($data)){
+                    self::deleteOneDirQiniuFiles($storage_path,array_pluck($data,'save_name'));
+                }
+
+                return $this->baseFailed('文件上传失败');
+            }
+            $data[] = $result['data'];
+        }
+
+        return $this->baseSucceed($data);
+    }
+
+    /**
+     * 删除七牛单个文件
+     * @param string $file_path
+     * @param string $file_name
+     * @return array
+     */
+    public function deleteQiniuFile(string $file_path, string $file_name)
+    {
+
+        $file = $file_path.'/'.$file_name;
+
+        $result = Storage::disk('qiniu')->delete($file);
+
+        if($result['status'] == false){
+            return $this->baseFailed();
+        }
+
+        return $this->baseSucceed();
+    }
+
+    /**
+     * 批量删除七牛文件（同一个目录下）
+     * @param string $file_path
+     * @param array $file_names
+     * @return array
+     */
+    public function deleteOneDirQiniuFiles(string $file_path, array $file_names)
+    {
+        $files = [];
+        foreach($file_names as $k => $item){
+            $files[] = $file_path.'/'.$item;
+        }
+        if(!$files){
+            return $this->baseFailed('请选择文件');
+        }
+
+        $result = Storage::disk('qiniu')->delete($file_names);
+
+        if($result['status'] == false){
+            return $this->baseFailed();
+        }
+
+        return $this->baseSucceed();
+    }
+
 
     /**
      * 文件存储
