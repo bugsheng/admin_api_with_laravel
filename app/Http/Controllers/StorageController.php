@@ -70,7 +70,7 @@ class StorageController extends Controller
         $file = $request->file('file');
 
         if(is_array($file)){
-            $result = $this->storageService->storeLocalFiles($path, $file);
+            $result = $this->storageService->storeAliOssFiles($path, $file);
         }else{
             $result = $this->storageService->storeAliOssFile($path, $file);
         }
