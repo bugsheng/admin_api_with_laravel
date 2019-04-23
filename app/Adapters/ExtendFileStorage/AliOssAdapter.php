@@ -78,6 +78,17 @@ class AliOssAdapter extends AbstractAdapter
         'Multipart'   => 128
     ];
 
+    /**
+     * AliOssAdapter constructor.
+     * @param OssClient $ossClient
+     * @param $bucket
+     * @param $endPoint
+     * @param $ssl
+     * @param bool $isCName
+     * @param $cdnDomain
+     * @param null $prefix
+     * @param array $options
+     */
     public function __construct(OssClient $ossClient,$bucket, $endPoint, $ssl, $isCName = false, $cdnDomain, $prefix = null, array $options = [])
     {
         $this->client       = $ossClient;
