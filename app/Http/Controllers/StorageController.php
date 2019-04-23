@@ -63,7 +63,7 @@ class StorageController extends Controller
         return $this->success($data);
     }
 
-    //存储本地文件
+    //存储阿里云文件
     public function storageAliOssFile(StorageLocalFileRequest $request){
 
         $path = $request->get('file_path','');
