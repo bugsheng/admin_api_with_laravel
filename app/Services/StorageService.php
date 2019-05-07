@@ -10,8 +10,8 @@ namespace App\Services;
 
 use App\Services\Interfaces\StorageInterface;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AdapterInterface;
-use Storage;
 
 class StorageService extends BaseService implements StorageInterface
 {
