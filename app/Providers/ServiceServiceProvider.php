@@ -13,8 +13,6 @@ class ServiceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Services\Interfaces\AuthInterface', 'App\Services\AuthService');
-        $this->app->bind('App\Services\Interfaces\PersonnelInterface', 'App\Services\PersonnelService');
         $this->app->bind('App\Services\Interfaces\StorageInterface', 'App\Services\StorageService');
     }
 

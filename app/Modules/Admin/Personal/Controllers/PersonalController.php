@@ -6,33 +6,34 @@
  * Time: 16:02
  */
 
-namespace App\Http\Controllers;
+namespace App\Modules\Admin\Personal\Controllers;
 
 
-use App\Http\Requests\PersonnelRequests\UpdateInfoRequest;
-use App\Http\Requests\PersonnelRequests\UpdateLoginPasswordRequest;
-use App\Services\Interfaces\PersonnelInterface as PersonnelService;
+use App\Http\Controllers\Controller;
+use App\Modules\Admin\Personal\Requests\UpdateInfoRequest;
+use App\Modules\Admin\Personal\Requests\UpdateLoginPasswordRequest;
+use App\Modules\Admin\Personal\Services\PersonalService;
 
 /**
  * 用户个人信息操作相关
  * Class CurrentUserController
  * @package App\Http\Controllers
  */
-class PersonnelController extends Controller
+class PersonalController extends Controller
 {
 
     /**
-     * @var PersonnelService
+     * @var PersonalService
      */
-    protected $personnelService;
+    protected $personalService;
 
     /**
      * CurrentUserController constructor.
-     * @param PersonnelService $personnelService
+     * @param PersonalService $personalService
      */
-    public function __construct(PersonnelService $personnelService)
+    public function __construct(PersonalService $personalService)
     {
-        $this->personnelService = $personnelService;
+        $this->personalService = $personalService;
     }
 
     /**
@@ -41,18 +42,25 @@ class PersonnelController extends Controller
      */
     public function info(){
 
-        $result = $this->personnelService->getUserInfo();
+        $infoResult = $this->personalService->getInfo();
 
-        $data = [
-            'personnel' => $result['data']
+        $result = [
+            'info' => $infoResult['data']
         ];
 
-        return $this->success($data);
+        return $this->success($result);
 
     }
 
-    //获取用户权限
-    public function getPermissions(){}
+    /*管理用户拥有权限的后台管理菜单*/
+    public function menus(){
+
+    }
+
+    /*管理用户拥有的操作接口权限*/
+    public function permissions(){
+
+    }
 
     /**
      * 更新用户基础信息
@@ -65,7 +73,7 @@ class PersonnelController extends Controller
         $require_data = $request->only(['name','email']);
 
         //更新信息
-        $result = $this->personnelService->updateInfo($require_data);
+        $result = $this->personalService->updateInfo($require_data);
 
         if(!$result['status']){
             return $this->failed($result['message']);
@@ -86,7 +94,7 @@ class PersonnelController extends Controller
         $require_data = $request->only(['old_password','password']);
 
         //更新密码
-        $result = $this->personnelService->updatePassword($require_data['old_password'],$require_data['password']);
+        $result = $this->personalService->updatePassword($require_data['old_password'],$require_data['password']);
 
         if(!$result['status']){
             return $this->failed($result['message']);

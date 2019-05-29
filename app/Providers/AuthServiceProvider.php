@@ -30,10 +30,10 @@ class AuthServiceProvider extends ServiceProvider
         //注册 Passport 路由
         Passport::routes(function (RouteRegistrar $router) {
             $router->forAccessTokens();
-        }, ['prefix' => 'api/oauth']);
+        }, ['prefix' => 'oauth']);
 
         //设置token过期时间
-        Passport::tokensExpireIn(now()->addDay(3));
-        Passport::refreshTokensExpireIn(now()->addDay(7));
+        Passport::tokensExpireIn(now()->addMinutes(60));
+        Passport::refreshTokensExpireIn(now()->addDay(14));
     }
 }

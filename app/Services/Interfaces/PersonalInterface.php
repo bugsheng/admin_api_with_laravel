@@ -9,16 +9,14 @@
 namespace App\Services\Interfaces;
 
 
-interface PersonnelInterface
+interface PersonalInterface
 {
 
     /**
      * 获取当前用户
      * @return mixed
      */
-    public function getUserInfo();
-
-    public function getUserPermissions();
+    public function getInfo();
 
     public function updateInfo(array $data);
 

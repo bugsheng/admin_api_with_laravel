@@ -23,26 +23,31 @@ trait ProxyTrait
 
     /**
      * 授权获取token
+     * @param string $guard
      * @param string $provider
      * @param string $login_name
      * @param string $login_password
      * @return bool|mixed
      */
-    public function authenticate($provider = '',$login_name, $login_password)
+    public function authenticate($guard = '', $provider = '',$login_name, $login_password)
     {
+        if(!$guard) {
+            $guard = config('auth.defaults.guard');
+        }
+
         $client = new Client();
 
         try {
-            $url = request()->root() . '/api/oauth/token';
+            $url = request()->root() . '/oauth/token';
 
-            if ($provider) {
-                $params = array_merge(config('passport.proxy'), [
+            if($provider){
+                $params = array_merge(config('passport.proxy.'.$guard), [
                     'username' => $login_name,
                     'password' => $login_password,
                     'provider' => $provider
                 ]);
-            } else {
-                $params = array_merge(config('passport.proxy'), [
+            }else{
+                $params = array_merge(config('passport.proxy.'.$guard), [
                     'username' => $login_name,
                     'password' => $login_password,
                 ]);
@@ -65,17 +70,22 @@ trait ProxyTrait
 
     /**
      * 刷新token
+     * @param string $guard
      * @param $refresh_token
      * @return bool|mixed
      */
-    public function getRefreshToken($refresh_token)
+    public function getRefreshToken($guard = '',$refresh_token)
     {
+        if(!$guard) {
+            $guard = config('auth.defaults.guard');
+        }
+
         $client = new Client();
 
         try {
-            $url = request()->root() . '/api/oauth/token';
+            $url = request()->root() . '/oauth/token';
 
-            $params = array_merge(config('passport.refresh_token'), [
+            $params = array_merge(config('passport.refresh_token.'.$guard), [
                 'refresh_token' => $refresh_token,
             ]);
 

@@ -36,10 +36,14 @@ return [
     */
 
     'guards' => [
-        'api' => [
+        'admin' => [
             'driver'   => 'passport',
             'provider' => 'users',
-        ]
+        ],
+        'api' => [
+            'driver'   => 'passport',
+            'provider' => 'members',
+        ],
     ],
 
     /*
@@ -64,7 +68,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
+        'members' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

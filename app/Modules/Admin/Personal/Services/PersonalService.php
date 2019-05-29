@@ -6,17 +6,24 @@
  * Time: 16:07
  */
 
-namespace App\Services;
+namespace App\Modules\Admin\Personal\Services;
 
+use App\Models\User;
 use App\Repositories\Interfaces\UserInterface as UserRepository;
-use App\Services\Interfaces\PersonnelInterface;
+use App\Services\BaseService;
+use App\Services\Interfaces\PersonalInterface;
 use App\Validates\Interfaces\CurrentUser\UpdateInfoInterface as UpdateInfoValidate;
 use Auth;
 use Hash;
 
-class PersonnelService extends BaseService implements PersonnelInterface
+class PersonalService extends BaseService implements PersonalInterface
 {
 
+    const GUARD_TYPE = 'admin';
+
+    /**
+     * @var \Illuminate\Contracts\Auth\Authenticatable|User|null
+     */
     protected $user;
 
     /**
@@ -33,7 +40,7 @@ class PersonnelService extends BaseService implements PersonnelInterface
 
     public function __construct(UpdateInfoValidate $updateInfoValidate, UserRepository $userRepository)
     {
-        $this->user = Auth::user();
+        $this->user = Auth::guard(self::GUARD_TYPE)->user();
 
         $this->updateInfoValidate = $updateInfoValidate;
 
@@ -44,7 +51,7 @@ class PersonnelService extends BaseService implements PersonnelInterface
      * 获取当前登录的用户信息
      * @return array
      */
-    public function getUserInfo(){
+    public function getInfo(){
         $data = [
             'name' => $this->user->name,
             'email' => $this->user->email,
@@ -55,8 +62,6 @@ class PersonnelService extends BaseService implements PersonnelInterface
 
         return $this->baseSucceed($data);
     }
-
-    public function getUserPermissions(){}
 
     /**
      * 更新用户基础信息
@@ -120,5 +125,9 @@ class PersonnelService extends BaseService implements PersonnelInterface
     }
 
     public function updateAvatar(){}
+
+    public function getMenus(){}
+
+    public function getPermissions(){}
 
 }

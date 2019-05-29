@@ -10,14 +10,14 @@ namespace App\Repositories;
 
 
 use App\Models\User;
-use App\Repositories\Interfaces\AuthInterface;
+use App\Repositories\Interfaces\AdminAuthInterface;
 
 /**
  * 鉴权查询
  * Class AuthRepository
  * @package App\Repositories
  */
-class AuthRepository implements AuthInterface
+class AdminAuthRepository implements AdminAuthInterface
 {
 
     /**

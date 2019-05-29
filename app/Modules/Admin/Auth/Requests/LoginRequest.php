@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests\PersonnelRequests;
+namespace App\Modules\Admin\Auth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * 修改个人信息请求验证
- * Class UpdateCurrentUserInfoRequest
+ * 登录请求表单验证
+ * Class LoginRequest
  * @package App\Http\Requests
  */
-class UpdateInfoRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,8 +29,8 @@ class UpdateInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required',
-            'email'     => 'bail|required|email',
+            'username'  => 'required',
+            'password'  => 'required|string|min:6',
         ];
     }
 
@@ -42,9 +42,9 @@ class UpdateInfoRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'     => '昵称不可为空',
-            'email.required'    => '个人邮箱不可为空',
-            'email.email'       => '邮箱格式不正确',
+            'username.required' => '请输入用户名',
+            'password.required' => '请输入密码',
+            'password.min'      => '密码长度至少是6位',
         ];
     }
 }

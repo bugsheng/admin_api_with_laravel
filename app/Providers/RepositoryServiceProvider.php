@@ -13,8 +13,11 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Interfaces\AuthInterface', 'App\Repositories\AuthRepository');
+        /*Users表相关*/
+        $this->app->bind('App\Repositories\Interfaces\AdminAuthInterface', 'App\Repositories\AdminAuthRepository');
         $this->app->bind('App\Repositories\Interfaces\UserInterface', 'App\Repositories\UserRepository');
+
+
     }
 
     /**

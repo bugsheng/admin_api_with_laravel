@@ -18,15 +18,32 @@ return [
     'public_key' => env('PASSPORT_PUBLIC_KEY'),
 
     'proxy' => [
-        'grant_type' => env('OAUTH_GRANT_TYPE'),
-        'client_id' => env('OAUTH_CLIENT_ID'),
-        'client_secret' => env('OAUTH_CLIENT_SECRET'),
-        'scope' => env('OAUTH_SCOPE', '*'),
+        'admin' => [
+            'grant_type' => env('ADMIN_OAUTH_GRANT_TYPE'),
+            'client_id' => env('ADMIN_OAUTH_CLIENT_ID'),
+            'client_secret' => env('ADMIN_OAUTH_CLIENT_SECRET'),
+            'scope' => env('ADMIN_OAUTH_SCOPE', '*'),
+        ],
+        'api' => [
+            'grant_type' => env('API_OAUTH_GRANT_TYPE'),
+            'client_id' => env('API_OAUTH_CLIENT_ID'),
+            'client_secret' => env('API_OAUTH_CLIENT_SECRET'),
+            'scope' => env('API_OAUTH_SCOPE', '*'),
+        ],
     ],
     'refresh_token' => [
-        'grant_type' => 'refresh_token',
-        'client_id' => env('OAUTH_CLIENT_ID'),
-        'client_secret' => env('OAUTH_CLIENT_SECRET'),
-        'scope' => env('OAUTH_SCOPE', '*'),
+        'admin' => [
+            'grant_type' => 'refresh_token',
+            'client_id' => env('ADMIN_OAUTH_CLIENT_ID'),
+            'client_secret' => env('ADMIN_OAUTH_CLIENT_SECRET'),
+            'scope' => env('ADMIN_OAUTH_SCOPE', '*'),
+        ],
+        'api' => [
+            'grant_type' => 'refresh_token',
+            'client_id' => env('API_OAUTH_CLIENT_ID'),
+            'client_secret' => env('API_OAUTH_CLIENT_SECRET'),
+            'scope' => env('API_OAUTH_SCOPE', '*'),
+        ],
     ],
+
 ];

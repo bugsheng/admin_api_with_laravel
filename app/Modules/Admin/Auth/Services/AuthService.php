@@ -6,11 +6,12 @@
  * Time: 21:45
  */
 
-namespace App\Services;
+namespace App\Modules\Admin\Auth\Services;
 
 
 use App\Events\Logout;
 use App\Repositories\Interfaces\AdminAuthInterface as AuthRepository;
+use App\Services\BaseService;
 use App\Services\Interfaces\AuthInterface;
 use App\Traits\ProxyTrait;
 use Auth;
@@ -79,7 +80,7 @@ class AuthService extends BaseService implements AuthInterface
     public function refreshToken(string $refresh_token)
     {
 
-        $tokens = $this->getRefreshToken($refresh_token);
+        $tokens = $this->getRefreshToken(self::GUARD_TYPE, $refresh_token);
 
         if($tokens == false){
             return $this->baseFailed(self::REFRESH_TOKEN_ERROR);
@@ -94,9 +95,9 @@ class AuthService extends BaseService implements AuthInterface
      */
     public function logout(){
 
-        if (Auth::check()) {
+        if (Auth::guard(self::GUARD_TYPE)->check()) {
 
-            $currentUser = Auth::user();
+            $currentUser = Auth::guard(self::GUARD_TYPE)->user();
 
             //触发退出登录事件
             Event::dispatch(new Logout(

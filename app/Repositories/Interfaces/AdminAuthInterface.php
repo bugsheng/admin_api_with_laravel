@@ -11,7 +11,7 @@ namespace App\Repositories\Interfaces;
 
 use App\Models\User;
 
-interface AuthInterface
+interface AdminAuthInterface
 {
 
     /**

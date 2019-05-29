@@ -6,16 +6,17 @@
  * Time: 16:46
  */
 
-namespace App\Http\Controllers;
+namespace App\Modules\Admin\Auth\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Services\Interfaces\AuthInterface as AuthService;
+use App\Http\Controllers\Controller;
+use App\Modules\Admin\Auth\Requests\LoginRequest;
+use App\Modules\Admin\Auth\Services\AuthService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 
 /**
- * 鉴权控制器
+ * 后台管理鉴权控制器
  * Class AuthController
  * @package App\Http\Controllers\Api
  */
