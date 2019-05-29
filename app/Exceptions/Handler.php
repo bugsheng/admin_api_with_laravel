@@ -74,7 +74,7 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        $response =  $this->baseFailed('请先登录');
+        $response =  $this->baseFailed('登录失效，请先登录');
         return response()->json($response, 401);
     }
 

@@ -17,6 +17,11 @@ return [
 
     'public_key' => env('PASSPORT_PUBLIC_KEY'),
 
+    /*token有效时间 单位:分钟*/
+    'ttl' => env('PASSPORT_TOKEN_TTL', 60),
+
+    /*refresh_token有效时间 单位:分钟*/
+    'refresh_ttl' => env('PASSPORT_REFRESH_TOKEN_TTL', 20160),
     'proxy' => [
         'admin' => [
             'grant_type' => env('ADMIN_OAUTH_GRANT_TYPE'),

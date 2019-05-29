@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         }, ['prefix' => 'oauth']);
 
         //设置token过期时间
-        Passport::tokensExpireIn(now()->addMinutes(60));
-        Passport::refreshTokensExpireIn(now()->addDay(14));
+        Passport::tokensExpireIn(now()->addMinutes(config('passport.ttl')));
+        Passport::refreshTokensExpireIn(now()->addMinutes(config('passport.refresh_ttl')));
     }
 }

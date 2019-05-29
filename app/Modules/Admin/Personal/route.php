@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 /**
  * @version v1
  */
-Route::prefix('v1')->namespace('Personal\Controllers')->middleware('auth:api')->group(function () {
+Route::prefix('v1')->namespace('Personal\Controllers')->middleware(['check.token:admin','auth:admin'])->group(function () {
 
     Route::prefix('personal')->group(function(){
         /*获取当前登录用户信息*/

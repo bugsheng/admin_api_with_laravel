@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Admin\Personal\Requests\UpdateInfoRequest;
 use App\Modules\Admin\Personal\Requests\UpdateLoginPasswordRequest;
 use App\Modules\Admin\Personal\Services\PersonalService;
+use Illuminate\Http\Request;
 
 /**
  * 用户个人信息操作相关
@@ -40,7 +41,7 @@ class PersonalController extends Controller
      * 登录后获取用户基础信息
      * @return \Illuminate\Http\JsonResponse
      */
-    public function info(){
+    public function info(Request $request){
 
         $infoResult = $this->personalService->getInfo();
 

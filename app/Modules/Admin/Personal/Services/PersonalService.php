@@ -22,7 +22,7 @@ class PersonalService extends BaseService implements PersonalInterface
     const GUARD_TYPE = 'admin';
 
     /**
-     * @var \Illuminate\Contracts\Auth\Authenticatable|User|null
+     * @var User
      */
     protected $user;
 
@@ -40,8 +40,6 @@ class PersonalService extends BaseService implements PersonalInterface
 
     public function __construct(UpdateInfoValidate $updateInfoValidate, UserRepository $userRepository)
     {
-        $this->user = Auth::guard(self::GUARD_TYPE)->user();
-
         $this->updateInfoValidate = $updateInfoValidate;
 
         $this->userRepository = $userRepository;
@@ -52,6 +50,7 @@ class PersonalService extends BaseService implements PersonalInterface
      * @return array
      */
     public function getInfo(){
+        $this->user = Auth::guard(self::GUARD_TYPE)->user();
         $data = [
             'name' => $this->user->name,
             'email' => $this->user->email,
@@ -69,7 +68,7 @@ class PersonalService extends BaseService implements PersonalInterface
      * @return array
      */
     public function updateInfo(array $data){
-
+        $this->user = Auth::guard(self::GUARD_TYPE)->user();
         //数据验证
         $this->updateInfoValidate->setId($this->user->id);
         $result = $this->updateInfoValidate->updateInfo($data);
@@ -94,7 +93,7 @@ class PersonalService extends BaseService implements PersonalInterface
      * @return array
      */
     public function updatePassword(string $old_password, string $new_password){
-
+        $this->user = Auth::guard(self::GUARD_TYPE)->user();
         //检查旧密码是否正确
         $is_correct_password = self::checkPassword($this->user, $old_password);
         if(!$is_correct_password){
