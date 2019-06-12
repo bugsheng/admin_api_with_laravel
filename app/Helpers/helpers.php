@@ -6,39 +6,39 @@
  * Time: 14:15
  */
 
-if(! function_exists('arrayGroup')){
+if (!function_exists('arrayGroup')) {
     /**
      * 将二维数组根据某一个key进行分组重组
      * @param $array
      * @param $group_key
      * @return array
      */
-    function arrayGroup($array,$group_key)
+    function arrayGroup($array, $group_key)
     {
 
-        if(!$array){
+        if (!$array) {
             return [];
         }
 
-        $isStdClass=false;
-        if(!is_array($array[0])){
-            $isStdClass =true;
+        $isStdClass = false;
+        if (!is_array($array[0])) {
+            $isStdClass = true;
         }
 
-        $cur_arr=[];   //current row
+        $cur_arr = [];   //current row
         $result = [];
-        foreach($array as $item){
-            if($isStdClass){
+        foreach ($array as $item) {
+            if ($isStdClass) {
                 $cur_arr = (array)$item;
             } else {
                 $cur_arr = $item;
             }
 
-            if(!array_key_exists($group_key,$cur_arr)){
+            if (!array_key_exists($group_key, $cur_arr)) {
                 return [];
             }
 
-            $result[$cur_arr[$group_key]][] =$cur_arr;
+            $result[$cur_arr[$group_key]][] = $cur_arr;
 
         }
 
@@ -49,7 +49,7 @@ if(! function_exists('arrayGroup')){
     }
 }
 
-if(! function_exists('generateSMSCode')){
+if (!function_exists('generateSMSCode')) {
     /**
      * 生成指定长度的数字验证码
      * @param $len
@@ -59,12 +59,12 @@ if(! function_exists('generateSMSCode')){
     {
 
         $len = intval($len);
-        if($len === 0){
+        if ($len === 0) {
             return false;
         }
 
         $code = '';
-        for ($i=0; $i < $len; $i++) {
+        for ($i = 0; $i < $len; $i++) {
             $code = $code . rand(0, 9);
         }
 
@@ -72,7 +72,7 @@ if(! function_exists('generateSMSCode')){
     }
 }
 
-if(! function_exists('deepInArray')){
+if (!function_exists('deepInArray')) {
     /**
      * 判断一个多维数组中是否存在某一个值
      * @param $value
@@ -90,9 +90,9 @@ if(! function_exists('deepInArray')){
                 }
             }
 
-            if(in_array($value, $item)) {
+            if (in_array($value, $item)) {
                 return true;
-            } else if(deepInArray($value, $item)) {
+            } else if (deepInArray($value, $item)) {
                 return true;
             }
         }
@@ -100,7 +100,7 @@ if(! function_exists('deepInArray')){
     }
 }
 
-if(! function_exists('isJson')){
+if (!function_exists('isJson')) {
     /**
      * 判断一个字符串是否是有效的json字符串
      * @param $string
@@ -113,110 +113,114 @@ if(! function_exists('isJson')){
     }
 }
 
-if(! function_exists('isMobile')){
+if (!function_exists('isMobile')) {
     /**
      * 验证手机号码是否正确
      * @param String $mobile 手机号码
+     * @param bool|int $is_strict 是否严格模式
      * @return boolean
      */
-    function isMobile($mobile)
+    function isMobile($mobile, $is_strict = false)
     {
         //手机号码验证规则
-        $regx = "/^((1[3,4,5,7,8][0-9])|(14[5,6,7,8,9])|(16[6])|(19[9]))\d{8}$/";
+        if ($is_strict) {
+            $regx = "/^((1[3,4,5,7,8][0-9])|(14[5,6,7,8,9])|(16[6])|(19[9]))\d{8}$/";
+        } else {
+            $regx = "/^\d{11}$/";
+        }
 
-        if(preg_match($regx,$mobile)){
+        if (preg_match($regx, $mobile)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 }
 
-if(! function_exists('isAllChinese')){
+if (!function_exists('isAllChinese')) {
     /**
      * 判断姓名是否全是中文
      * @param $str
      * @return bool
      */
-    function isAllChinese($str){
+    function isAllChinese($str)
+    {
         //新疆等少数民族可能有·
-        if(strpos($str,'·')){
+        if (strpos($str, '·')) {
             //将·去掉，看看剩下的是不是都是中文
-            $str=str_replace("·",'',$str);
-            if(preg_match('/^[\x7f-\xff]+$/', $str)){
+            $str = str_replace("·", '', $str);
+            if (preg_match('/^[\x7f-\xff]+$/', $str)) {
                 return true;//全是中文
-            }else{
+            } else {
                 return false;//不全是中文
             }
-        }else{
-            if(preg_match('/^[\x7f-\xff]+$/', $str)){
+        } else {
+            if (preg_match('/^[\x7f-\xff]+$/', $str)) {
                 return true;//全是中文
-            }else{
+            } else {
                 return false;//不全是中文
             }
         }
     }
 }
 
-if(! function_exists('isIDCard')){
+if (!function_exists('isIDCard')) {
     /**
      * 验证身份证号码是否正确
      * @param String $id 身份证号码
+     * @param bool|int $is_strict 是否严格模式
      * @return boolean
      */
-    function isIDCard( $id = '' )
+    function isIDCard($id = '', $is_strict = false)
     {
         $id = strtoupper($id);
         $regx = "/(^\d{15}$)|(^\d{17}([0-9]|X)$)/";
         $arr_split = array();
-        if(!preg_match($regx, $id))
-        {
+        if (!preg_match($regx, $id)) {
             return false;
         }
-        if(15==strlen($id)) //检查15位
+
+        if (!$is_strict) {
+            return true;
+        }
+
+        if (15 == strlen($id)) //检查15位
         {
             $regx = "/^(\d{6})+(\d{2})+(\d{2})+(\d{2})+(\d{3})$/";
 
             @preg_match($regx, $id, $arr_split);
             //检查生日日期是否正确
-            $dtm_birth = "19".$arr_split[2] . '/' . $arr_split[3]. '/' .$arr_split[4];
-            if(!strtotime($dtm_birth))
-            {
+            $dtm_birth = "19" . $arr_split[2] . '/' . $arr_split[3] . '/' . $arr_split[4];
+            if (!strtotime($dtm_birth)) {
                 return false;
             } else {
                 return true;
             }
-        }
-        else      //检查18位
+        } else      //检查18位
         {
             $regx = "/^(\d{6})+(\d{4})+(\d{2})+(\d{2})+(\d{3})([0-9]|X)$/";
             @preg_match($regx, $id, $arr_split);
-            $dtm_birth = $arr_split[2] . '/' . $arr_split[3]. '/' .$arr_split[4];
-            if(!strtotime($dtm_birth)) //检查生日日期是否正确
+            $dtm_birth = $arr_split[2] . '/' . $arr_split[3] . '/' . $arr_split[4];
+            if (!strtotime($dtm_birth)) //检查生日日期是否正确
             {
                 return false;
-            }
-            else
-            {
+            } else {
                 //检验18位身份证的校验码是否正确。
                 //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
                 $arr_int = array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
                 $arr_ch = array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
                 $sign = 0;
-                for ( $i = 0; $i < 17; $i++ )
-                {
-                    $b = (int) $id{$i};
+                for ($i = 0; $i < 17; $i++) {
+                    $b = (int)$id{$i};
                     $w = $arr_int[$i];
                     $sign += $b * $w;
                 }
                 $n = $sign % 11;
                 $val_num = $arr_ch[$n];
-                if ($val_num != substr($id,17, 1))
-                {
+                if ($val_num != substr($id, 17, 1)) {
                     return false;
                 } //phpfensi.com
-                else
-                {
+                else {
                     return true;
                 }
             }
@@ -225,7 +229,7 @@ if(! function_exists('isIDCard')){
     }
 }
 
-if(! function_exists('numberToChinese')){
+if (!function_exists('numberToChinese')) {
     /**
      *　数字金额转换成中文大写金额的函数
      *　@param int $num 要转换的小写数字或小写字符串
@@ -248,7 +252,7 @@ if(! function_exists('numberToChinese')){
         while (1) {
             if ($i == 0) {
                 //获取最后一位数字
-                $n = substr($num, strlen($num)-1, 1);
+                $n = substr($num, strlen($num) - 1, 1);
             } else {
                 $n = $num % 10;
             }
@@ -279,25 +283,25 @@ if(! function_exists('numberToChinese')){
                 $left = substr($c, 0, $j);
                 $right = substr($c, $j + 3);
                 $c = $left . $right;
-                $j = $j-3;
-                $slen = $slen-3;
+                $j = $j - 3;
+                $slen = $slen - 3;
             }
             $j = $j + 3;
         }
         //这个是为了去掉类似23.0中最后一个“零”字
-        if (substr($c, strlen($c)-3, 3) == '零') {
-            $c = substr($c, 0, strlen($c)-3);
+        if (substr($c, strlen($c) - 3, 3) == '零') {
+            $c = substr($c, 0, strlen($c) - 3);
         }
         //将处理的汉字加上“整”
         if (empty($c)) {
             return "零元整";
-        }else{
+        } else {
             return $c . "整";
         }
     }
 }
 
-if(! function_exists('loadImg')){
+if (!function_exists('loadImg')) {
     /**
      * 保存网络图片到服务器
      * 小程序传的头像是网络地址需要周转一下
@@ -305,7 +309,7 @@ if(! function_exists('loadImg')){
      * @param $local_url
      * @return bool|int
      */
-    function loadImg($image_url,$local_url)
+    function loadImg($image_url, $local_url)
     {
         $img_file = file_get_contents($image_url);
         $img_content = base64_encode($img_file);
@@ -315,7 +319,7 @@ if(! function_exists('loadImg')){
     }
 }
 
-if(! function_exists('getClientIp')){
+if (!function_exists('getClientIp')) {
     /**
      * 获取客户端 ip
      * @return array|false|null|string
@@ -350,7 +354,7 @@ if(! function_exists('getClientIp')){
     }
 }
 
-if(! function_exists('issetAndNotEmpty')){
+if (!function_exists('issetAndNotEmpty')) {
     /**
      * 判断数组的键是否存在，并且佱不为空
      * @param $arr
@@ -363,7 +367,7 @@ if(! function_exists('issetAndNotEmpty')){
     }
 }
 
-if(! function_exists('trimAllBlankSpace')){
+if (!function_exists('trimAllBlankSpace')) {
     /**
      * 过滤用户输入数据中的空格 全角空格 tab
      * @param $str
@@ -378,7 +382,7 @@ if(! function_exists('trimAllBlankSpace')){
     }
 }
 
-if(! function_exists('getHourAndMin')){
+if (!function_exists('getHourAndMin')) {
     /**
      * 将时间戳转换成 xx 时\xx 分
      * @param $time
@@ -399,7 +403,7 @@ if(! function_exists('getHourAndMin')){
     }
 }
 
-if(! function_exists('getTowPositionDistance')){
+if (!function_exists('getTowPositionDistance')) {
     /**
      * 根据经纬度获取两点间的直线距离，返回 KM
      * @param $lon1
@@ -432,7 +436,7 @@ if(! function_exists('getTowPositionDistance')){
     }
 }
 
-if(! function_exists('geOrderSn')){
+if (!function_exists('geOrderSn')) {
     /**
      * 生成唯一订单号
      * @param string $pre 前缀
@@ -455,7 +459,7 @@ if(! function_exists('geOrderSn')){
     }
 }
 
-if(! function_exists('httpPostNoRest')){
+if (!function_exists('httpPostNoRest')) {
     /**
      * 发起一个http 请求
      * @param $url
@@ -481,7 +485,7 @@ if(! function_exists('httpPostNoRest')){
     }
 }
 
-if(! function_exists('httpPostRequest')){
+if (!function_exists('httpPostRequest')) {
     /**
      * http post请求
      * @param $url
@@ -509,7 +513,7 @@ if(! function_exists('httpPostRequest')){
     }
 }
 
-if(! function_exists('httpGetRequest')){
+if (!function_exists('httpGetRequest')) {
     /**
      * curl一个http get请求
      * @param $url
@@ -532,8 +536,7 @@ if(! function_exists('httpGetRequest')){
 
 }
 
-if (! function_exists('addslashesDeep'))
-{
+if (!function_exists('addslashesDeep')) {
     /**
      * 递归方式的对变量中的特殊字符进行转义
      * @param $value
@@ -541,18 +544,15 @@ if (! function_exists('addslashesDeep'))
      */
     function addslashesDeep($value)
     {
-        if (empty($value))
-        {
+        if (empty($value)) {
             return $value;
-        }
-        else
-        {
+        } else {
             return is_array($value) ? array_map('addslashesDeep', $value) : addslashes($value);
         }
     }
 }
 
-if(! function_exists('userTextEncode')){
+if (!function_exists('userTextEncode')) {
     /**
      * 把用户输入的文本转义（主要针对特殊符号和emoji表情）
      * @param $str
@@ -560,47 +560,49 @@ if(! function_exists('userTextEncode')){
      */
     function userTextEncode($str)
     {
-        if(!is_string($str))return $str;
-        if(!$str || $str=='undefined')return '';
+        if (!is_string($str)) return $str;
+        if (!$str || $str == 'undefined') return '';
 
         $text = json_encode($str); //暴露出unicode
-        $text = preg_replace_callback("/(\\\u[ed][0-9a-f]{3})/i",function($str){
+        $text = preg_replace_callback("/(\\\u[ed][0-9a-f]{3})/i", function ($str) {
             return addslashes($str[0]);
-        },$text); //将emoji的unicode留下，其他不动，这里的正则比原答案增加了d，因为我发现我很多emoji实际上是\ud开头的，反而暂时没发现有\ue开头。
+        }, $text); //将emoji的unicode留下，其他不动，这里的正则比原答案增加了d，因为我发现我很多emoji实际上是\ud开头的，反而暂时没发现有\ue开头。
         return json_decode($text);
     }
 }
 
-if(! function_exists('userTextDecode')){
+if (!function_exists('userTextDecode')) {
     /**
      * 解码userTextEncode转义的内容 与 userTextEncode配对使用
      * @param $str
      * @return mixed
      */
-    function userTextDecode($str){
+    function userTextDecode($str)
+    {
         $text = json_encode($str); //暴露出unicode
-        $text = preg_replace_callback('/\\\\\\\\/i',function(){
+        $text = preg_replace_callback('/\\\\\\\\/i', function () {
             return '\\';
-        },$text); //将两条斜杠变成一条，其他不动
+        }, $text); //将两条斜杠变成一条，其他不动
         return json_decode($text);
     }
 }
 
-if(!function_exists('getInitials')){
+if (!function_exists('getInitials')) {
     /**
      * 获取首字母
      * @param  string $str 汉字字符串
      * @return string 首字母
      */
-    function getInitials($str){
+    function getInitials($str)
+    {
         if (empty($str)) return '#';
         $fChar = ord($str{0});
         if ($fChar >= ord('A') && $fChar <= ord('z'))
             return strtoupper($str{0});
 
-        $s1  = iconv('UTF-8', 'gb2312', $str);
-        $s2  = iconv('gb2312', 'UTF-8', $s1);
-        $s   = $s2 == $str ? $s1 : $str;
+        $s1 = iconv('UTF-8', 'gb2312', $str);
+        $s2 = iconv('gb2312', 'UTF-8', $s1);
+        $s = $s2 == $str ? $s1 : $str;
         $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
         if ($asc >= -20319 && $asc <= -20284)
             return 'A';
@@ -698,14 +700,15 @@ if(!function_exists('getInitials')){
     }
 }
 
-if(!function_exists('getArrayRepeat')){
+if (!function_exists('getArrayRepeat')) {
     /**
      * 作用：根据二维数组中的部分键值判断二维数组中是否有重复值
-     * @param array $arr  目标数组
-     * @param array $keys  要进行判断的键值组合的数组
+     * @param array $arr 目标数组
+     * @param array $keys 要进行判断的键值组合的数组
      * @return array 重复的值
      */
-    function getArrayRepeat($arr = [],$keys = []) {
+    function getArrayRepeat($arr = [], $keys = [])
+    {
         $unique_arr = array();
         $repeat_arr = array();
         foreach ($arr as $k => $v) {
@@ -713,7 +716,7 @@ if(!function_exists('getArrayRepeat')){
             foreach ($keys as $a => $b) {
                 $str .= "{$v[$b]},";
             }
-            if( !in_array($str, $unique_arr) ){
+            if (!in_array($str, $unique_arr)) {
                 $unique_arr[] = $str;
             } else {
                 $repeat_arr[] = $v;
@@ -723,21 +726,22 @@ if(!function_exists('getArrayRepeat')){
     }
 }
 
-if(!function_exists('hasArrayRepeat')){
+if (!function_exists('hasArrayRepeat')) {
     /**
      * 作用：根据二维数组中的部分键值判断二维数组中是否有重复值
-     * @param array $arr  目标数组
-     * @param array $keys  要进行判断的键值组合的数组
+     * @param array $arr 目标数组
+     * @param array $keys 要进行判断的键值组合的数组
      * @return bool 是有重复 true有重复 false无重复
      */
-    function hasArrayRepeat($arr = [],$keys = []) {
+    function hasArrayRepeat($arr = [], $keys = [])
+    {
         $unique_arr = array();
         foreach ($arr as $k => $v) {
             $str = "";
             foreach ($keys as $a => $b) {
                 $str .= "{$v[$b]},";
             }
-            if( !in_array($str, $unique_arr) ){
+            if (!in_array($str, $unique_arr)) {
                 $unique_arr[] = $str;
             } else {
                 return true;
@@ -747,7 +751,7 @@ if(!function_exists('hasArrayRepeat')){
     }
 }
 
-if(!function_exists('is_assoc')){
+if (!function_exists('is_assoc')) {
     /**
      * 作用：检测数组是否为索引数组。
      * @param array $arr 传入的数组
@@ -760,7 +764,7 @@ if(!function_exists('is_assoc')){
     }
 }
 
-if(!function_exists('str_replace_limit')){
+if (!function_exists('str_replace_limit')) {
     /**
      * 对字符串执行指定次数替换
      * @param Mixed $search 查找目标值
@@ -769,13 +773,14 @@ if(!function_exists('str_replace_limit')){
      * @param Int $limit 允许替换的次数，默认为-1，不限次数
      * @return Mixed
      */
-    function str_replace_limit($search, $replace, $subject, $limit=-1){
-        if(is_array($search)){
-            foreach($search as $k=>$v){
-                $search[$k] = '`'. preg_quote($search[$k], '`'). '`';
+    function str_replace_limit($search, $replace, $subject, $limit = -1)
+    {
+        if (is_array($search)) {
+            foreach ($search as $k => $v) {
+                $search[$k] = '`' . preg_quote($search[$k], '`') . '`';
             }
-        }else{
-            $search = '`'. preg_quote($search, '`'). '`';
+        } else {
+            $search = '`' . preg_quote($search, '`') . '`';
         }
         return preg_replace($search, $replace, $subject, $limit);
     }
