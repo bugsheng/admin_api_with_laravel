@@ -192,7 +192,6 @@ class StorageService extends BaseService implements StorageInterface
             $result = self::storeAliOssFile($storage_path, $file, $is_public);
             if($result['status'] == false){
 
-                //TODO 监听失败删除之前上传成功的线上文件
                 //如果之前有文件上传成功的，删除文件
                 if(count($data)){
                     self::deleteOneDirAliOssFiles($storage_path,array_pluck($data,'save_name'));
