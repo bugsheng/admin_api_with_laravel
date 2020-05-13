@@ -15,6 +15,7 @@ use App\Repositories\Interfaces\AdminAuthInterface;
 /**
  * 鉴权查询
  * Class AuthRepository
+ *
  * @package App\Repositories
  */
 class AdminAuthRepository implements AdminAuthInterface
@@ -27,6 +28,7 @@ class AdminAuthRepository implements AdminAuthInterface
 
     /**
      * AuthRepository constructor.
+     *
      * @param User $user
      */
     public function __construct(User $user)
@@ -36,10 +38,13 @@ class AdminAuthRepository implements AdminAuthInterface
 
     /**
      * 登录用户查询
+     *
      * @param $value
+     *
      * @return bool|mixed
      */
-    public function findForPassport($value){
+    public function findForPassport($value)
+    {
 
         $user = $this->user->findForPassport($value);
         return $user;
@@ -47,13 +52,15 @@ class AdminAuthRepository implements AdminAuthInterface
 
     /**
      * 更新记录登录信息
+     *
      * @param $user
      */
-    public function putLoginRecord(User $user){
+    public function putLoginRecord(User $user)
+    {
         $user->last_login_at = $user->login_at;
         $user->last_login_ip = $user->login_ip;
-        $user->login_at = now();
-        $user->login_ip = request()->ip();
+        $user->login_at      = now();
+        $user->login_ip      = request()->ip();
         $user->save();
 
     }

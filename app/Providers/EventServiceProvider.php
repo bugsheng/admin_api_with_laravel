@@ -12,7 +12,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Illuminate\Auth\Events\Registered' => [
+        'Illuminate\Auth\Events\Registered'          => [
             'Illuminate\Auth\Listeners\SendEmailVerificationNotification'
         ],
 
@@ -20,12 +20,12 @@ class EventServiceProvider extends ServiceProvider
         'Laravel\Passport\Events\AccessTokenCreated' => [
             'App\Listeners\Login\RevokeOldTokens'
         ],
-//        'Laravel\Passport\Events\RefreshTokenCreated' => [
-//            'App\Listeners\Login\PruneOldTokens'
-//        ],
+        //        'Laravel\Passport\Events\RefreshTokenCreated' => [
+        //            'App\Listeners\Login\PruneOldTokens'
+        //        ],
 
         //退出登录事件监听，移除当前用户使用的token和refreshToken
-        'App\Events\Logout' => [
+        'App\Events\Logout'                          => [
             'App\Listeners\Logout\RevokeCurrentToken',
             'App\Listeners\Logout\PruneCurrentToken'
         ],

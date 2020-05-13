@@ -5,6 +5,7 @@ namespace App\Events;
 /**
  * 退出登录事件
  * Class Logout
+ *
  * @package App\Events
  */
 class Logout
@@ -19,6 +20,7 @@ class Logout
 
     /**
      * Logout constructor.
+     *
      * @param $tokenId
      */
     public function __construct($tokenId)

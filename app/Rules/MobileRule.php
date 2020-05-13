@@ -14,6 +14,7 @@ use Illuminate\Contracts\Validation\Rule;
 /**
  * 手机号码验证规则
  * Class MobileRule
+ *
  * @package App\Rules
  */
 class MobileRule implements Rule
@@ -22,8 +23,9 @@ class MobileRule implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
+     * @param  string $attribute
      * @param  mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

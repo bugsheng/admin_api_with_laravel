@@ -14,21 +14,26 @@ interface AuthInterface
 
     /**
      * 登录
+     *
      * @param string $login_name
      * @param string $login_password
+     *
      * @return mixed
      */
     public function login(string $login_name, string $login_password);
 
     /**
      * 刷新令牌
+     *
      * @param string $refresh_token
+     *
      * @return mixed
      */
     public function refreshToken(string $refresh_token);
 
     /**
      * 登出
+     *
      * @return mixed
      */
     public function logout();

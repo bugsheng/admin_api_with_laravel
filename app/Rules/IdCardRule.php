@@ -13,6 +13,7 @@ use Illuminate\Contracts\Validation\Rule;
 /**
  * 身份证号码验证规则
  * Class IdCardRule
+ *
  * @package App\Rules
  */
 class IdCardRule implements Rule
@@ -21,8 +22,9 @@ class IdCardRule implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
+     * @param  string $attribute
      * @param  mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

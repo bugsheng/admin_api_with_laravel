@@ -8,6 +8,7 @@ use Laravel\Passport\Events\AccessTokenCreated;
 /**
  * 用于清除旧的access_token
  * Class RevokeOldTokens
+ *
  * @package App\Listeners
  */
 class RevokeOldTokens
@@ -25,7 +26,8 @@ class RevokeOldTokens
     /**
      * Handle the event.
      *
-     * @param  AccessTokenCreated  $event
+     * @param  AccessTokenCreated $event
+     *
      * @return void
      */
     public function handle(AccessTokenCreated $event)

@@ -35,7 +35,9 @@ class Handler extends ExceptionHandler
 
     /**
      *  Report or log an exception.
+     *
      * @param Exception $exception
+     *
      * @return mixed|void
      * @throws Exception
      */
@@ -47,19 +49,20 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception               $exception
+     *
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
-        if($exception instanceof  ModelNotFoundException){
-            $response =  $this->baseFailed('Not Found!');
+        if ($exception instanceof ModelNotFoundException) {
+            $response = $this->baseFailed('Not Found!');
             return response()->json($response, 404);
         }
 
-        if($exception instanceof  MethodNotFoundException){
-            $response =  $this->baseFailed('Not Found!');
+        if ($exception instanceof MethodNotFoundException) {
+            $response = $this->baseFailed('Not Found!');
             return response()->json($response, 404);
         }
 
@@ -68,30 +71,34 @@ class Handler extends ExceptionHandler
 
     /**
      * 未登录授权自定义异常返回
+     *
      * @param \Illuminate\Http\Request $request
-     * @param AuthenticationException $exception
+     * @param AuthenticationException  $exception
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-        $response =  $this->baseFailed('登录失效，请先登录');
+        $response = $this->baseFailed('登录失效，请先登录');
         return response()->json($response, 401);
     }
 
     /**
      * FormRequest表单验证失败自定义返回
+     *
      * @param \Illuminate\Http\Request $request
-     * @param ValidationException $exception
+     * @param ValidationException      $exception
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function invalidJson($request, ValidationException $exception)
     {
         $message = $exception->getMessage();
-        if($message == 'The given data was invalid.'){
+        if ($message == 'The given data was invalid.') {
             $message = '验证失败';
         }
 
-        $response =  $this->baseFailed($message,$exception->errors());
+        $response = $this->baseFailed($message, $exception->errors());
         return response()->json($response, $exception->status);
     }
 }

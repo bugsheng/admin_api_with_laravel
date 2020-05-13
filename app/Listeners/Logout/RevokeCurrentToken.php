@@ -20,12 +20,13 @@ class RevokeCurrentToken
     /**
      * Handle the event.
      *
-     * @param  Logout  $event
+     * @param  Logout $event
+     *
      * @return void
      */
     public function handle(Logout $event)
     {
         //退出登录成功，失效token
-        DB::table('oauth_access_tokens')->where('id', '=', $event->tokenId) ->delete();
+        DB::table('oauth_access_tokens')->where('id', '=', $event->tokenId)->delete();
     }
 }

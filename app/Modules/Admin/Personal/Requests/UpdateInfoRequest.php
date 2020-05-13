@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * 修改个人信息请求验证
  * Class UpdateCurrentUserInfoRequest
+ *
  * @package App\Http\Requests
  */
 class UpdateInfoRequest extends FormRequest
@@ -29,8 +30,8 @@ class UpdateInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required',
-            'email'     => 'bail|required|email',
+            'name'  => 'required',
+            'email' => 'bail|required|email',
         ];
     }
 
@@ -42,9 +43,9 @@ class UpdateInfoRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'     => '昵称不可为空',
-            'email.required'    => '个人邮箱不可为空',
-            'email.email'       => '邮箱格式不正确',
+            'name.required'  => '昵称不可为空',
+            'email.required' => '个人邮箱不可为空',
+            'email.email'    => '邮箱格式不正确',
         ];
     }
 }

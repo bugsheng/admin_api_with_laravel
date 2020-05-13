@@ -24,13 +24,13 @@ class StoreUploadFileRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'file' =>[ 'required']
+            'file' => ['required']
         ];
 
         //如果是多个文件上传
-        if(is_array($this->file('file'))){
+        if (is_array($this->file('file'))) {
             $rules['file.*'] = ['file'];
-        }else{
+        } else {
             $rules['file'][] = 'file';
         }
 

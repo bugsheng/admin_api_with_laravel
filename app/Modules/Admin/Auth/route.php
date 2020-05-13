@@ -26,7 +26,7 @@ Route::prefix('v1')->namespace('Auth\Controllers')->group(function () {
 
     Route::get('test', function () {
 
-        $test = function ($ids){
+        $test = function ($ids) {
             $ids = is_array($ids) ? $ids : func_get_args();
             return $ids;
         };
@@ -38,7 +38,7 @@ Route::prefix('v1')->namespace('Auth\Controllers')->group(function () {
     Route::post('login', 'AuthController@login');
 
     /*刷新token*/
-    Route::post('refresh_token','AuthController@refreshToken');
+    Route::post('refresh_token', 'AuthController@refreshToken');
 
     //授权登录后才可访问的接口
     Route::middleware('auth:admin')->group(function () {

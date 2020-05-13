@@ -34,10 +34,10 @@ class QiniuServiceProvider extends ServiceProvider
         Storage::extend('qiniu', function ($app, $config) {
 
             //从七牛获得的AccessKeyId
-            $accessKeyId        = $config['access_key_id'];
+            $accessKeyId = $config['access_key_id'];
 
             //从七牛获得的AccessKeySecret
-            $accessKeySecret    = $config['access_key_secret'];
+            $accessKeySecret = $config['access_key_secret'];
 
             //存储空间
             $bucket = $config['bucket'];
@@ -49,9 +49,9 @@ class QiniuServiceProvider extends ServiceProvider
             $cdnDomain = $config['cdn_domain'];
 
             $authManager = new Auth($accessKeyId, $accessKeySecret);
-            $adapter = new QiniuAdapter($authManager, $bucket, $ssl, $cdnDomain);
+            $adapter     = new QiniuAdapter($authManager, $bucket, $ssl, $cdnDomain);
 
-            $filesystem =  new Filesystem($adapter);
+            $filesystem = new Filesystem($adapter);
 
             return $filesystem;
         });

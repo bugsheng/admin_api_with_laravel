@@ -15,8 +15,9 @@ interface LocalPublicStorageInterface
 {
 
     /**
-     * @param string $storage_path
+     * @param string       $storage_path
      * @param UploadedFile $file
+     *
      * @return mixed
      */
     public function storeLocalFile(string $storage_path, UploadedFile $file);

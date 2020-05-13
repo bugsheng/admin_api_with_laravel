@@ -21,15 +21,16 @@ use Hash;
 /**
  * 登录登出鉴权服务
  * Class AuthService
+ *
  * @package App\Services
  */
 class AuthService extends BaseService implements AuthInterface
 {
     use ProxyTrait;
 
-    const LOGIN_ERROR = '用户名或密码错误';
+    const LOGIN_ERROR         = '用户名或密码错误';
     const REFRESH_TOKEN_ERROR = '登录失效，请重新登录';
-    const GUARD_TYPE = 'admin';
+    const GUARD_TYPE          = 'admin';
 
     protected $authRepository;
 
@@ -40,27 +41,31 @@ class AuthService extends BaseService implements AuthInterface
 
     /**
      * 登录验证及授权服务
+     *
      * @param string $login_name
      * @param string $login_password
+     *
      * @return array
      */
-    public function login(string $login_name,string $login_password){
+    public function login(string $login_name, string $login_password)
+    {
 
         //检查用户是否存在
         $user = $this->authRepository->findForPassport($login_name);
-        if($user == false){
+        if ($user == false) {
             return $this->baseFailed(self::LOGIN_ERROR);
         }
 
         //检查密码是否正确
         $is_correct_password = self::checkPassword($user, $login_password);
-        if(!$is_correct_password){
+        if (!$is_correct_password) {
             return $this->baseFailed(self::LOGIN_ERROR);
         }
 
         //获取OAuth2.0授权
-        $tokens = $this->authenticate(self::GUARD_TYPE,config('auth.guards.'.self::GUARD_TYPE.'.provider'), $login_name, $login_password);
-        if($tokens == false){
+        $tokens = $this->authenticate(self::GUARD_TYPE, config('auth.guards.' . self::GUARD_TYPE . '.provider'),
+            $login_name, $login_password);
+        if ($tokens == false) {
             return $this->baseFailed(self::LOGIN_ERROR);
         }
 
@@ -74,7 +79,9 @@ class AuthService extends BaseService implements AuthInterface
 
     /**
      * 刷新令牌
+     *
      * @param string $refresh_token
+     *
      * @return array|mixed
      */
     public function refreshToken(string $refresh_token)
@@ -82,7 +89,7 @@ class AuthService extends BaseService implements AuthInterface
 
         $tokens = $this->getRefreshToken(self::GUARD_TYPE, $refresh_token);
 
-        if($tokens == false){
+        if ($tokens == false) {
             return $this->baseFailed(self::REFRESH_TOKEN_ERROR);
         }
 
@@ -93,7 +100,8 @@ class AuthService extends BaseService implements AuthInterface
     /**
      * 退出登录
      */
-    public function logout(){
+    public function logout()
+    {
 
         if (Auth::guard(self::GUARD_TYPE)->check()) {
 
@@ -109,11 +117,13 @@ class AuthService extends BaseService implements AuthInterface
 
     /**
      * 检查登录密码
+     *
      * @param $user
      * @param $password
+     *
      * @return bool
      */
-    protected function checkPassword($user, $password) :bool
+    protected function checkPassword($user, $password): bool
     {
         return Hash::check($password, $user->password);
     }

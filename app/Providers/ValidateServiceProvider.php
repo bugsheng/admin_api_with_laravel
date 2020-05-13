@@ -13,7 +13,8 @@ class ValidateServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Validates\Interfaces\CurrentUser\UpdateInfoInterface', 'App\Validates\CurrentUser\UpdateInfoValidate');
+        $this->app->bind('App\Validates\Interfaces\CurrentUser\UpdateInfoInterface',
+            'App\Validates\CurrentUser\UpdateInfoValidate');
     }
 
     /**

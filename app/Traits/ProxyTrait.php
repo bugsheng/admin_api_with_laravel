@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\RequestException;
 /**
  * 授权Trait
  * Trait ProxyTrait
+ *
  * @package App\Traits
  */
 trait ProxyTrait
@@ -23,15 +24,17 @@ trait ProxyTrait
 
     /**
      * 授权获取token
+     *
      * @param string $guard
      * @param string $provider
      * @param string $login_name
      * @param string $login_password
+     *
      * @return bool|mixed
      */
-    public function authenticate($guard = '', $provider = '',$login_name, $login_password)
+    public function authenticate($guard = '', $provider = '', $login_name, $login_password)
     {
-        if(!$guard) {
+        if (!$guard) {
             $guard = config('auth.defaults.guard');
         }
 
@@ -40,14 +43,14 @@ trait ProxyTrait
         try {
             $url = request()->root() . '/oauth/token';
 
-            if($provider){
-                $params = array_merge(config('passport.proxy.'.$guard), [
+            if ($provider) {
+                $params = array_merge(config('passport.proxy.' . $guard), [
                     'username' => $login_name,
                     'password' => $login_password,
                     'provider' => $provider
                 ]);
-            }else{
-                $params = array_merge(config('passport.proxy.'.$guard), [
+            } else {
+                $params = array_merge(config('passport.proxy.' . $guard), [
                     'username' => $login_name,
                     'password' => $login_password,
                 ]);
@@ -70,13 +73,15 @@ trait ProxyTrait
 
     /**
      * 刷新token
+     *
      * @param string $guard
-     * @param $refresh_token
+     * @param        $refresh_token
+     *
      * @return bool|mixed
      */
-    public function getRefreshToken($guard = '',$refresh_token)
+    public function getRefreshToken($guard = '', $refresh_token)
     {
-        if(!$guard) {
+        if (!$guard) {
             $guard = config('auth.defaults.guard');
         }
 
@@ -85,7 +90,7 @@ trait ProxyTrait
         try {
             $url = request()->root() . '/oauth/token';
 
-            $params = array_merge(config('passport.refresh_token.'.$guard), [
+            $params = array_merge(config('passport.refresh_token.' . $guard), [
                 'refresh_token' => $refresh_token,
             ]);
 

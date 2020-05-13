@@ -24,7 +24,7 @@ use Qiniu\Storage\UploadManager;
 class QiniuAdapter extends AbstractAdapter
 {
 
-    use NotSupportingVisibilityTrait,StreamedReadingTrait;
+    use NotSupportingVisibilityTrait, StreamedReadingTrait;
 
     /**
      * @var string
@@ -73,10 +73,10 @@ class QiniuAdapter extends AbstractAdapter
 
     public function __construct($authManager, $bucket, $ssl = false, $cdnDomain)
     {
-        $this->authManager  = $authManager;
-        $this->bucket       = $bucket;
-        $this->ssl          = $ssl;
-        $this->cdnDomain    = $cdnDomain;
+        $this->authManager = $authManager;
+        $this->bucket      = $bucket;
+        $this->ssl         = $ssl;
+        $this->cdnDomain   = $cdnDomain;
         $this->setBucketManager($authManager);
         $this->setUploadManager();
         $this->setCdnManager($authManager);
@@ -84,6 +84,7 @@ class QiniuAdapter extends AbstractAdapter
 
     /**
      * @param Auth $auth
+     *
      * @return $this
      */
     public function setBucketManager(Auth $auth)
@@ -119,6 +120,7 @@ class QiniuAdapter extends AbstractAdapter
 
     /**
      * @param Auth $auth
+     *
      * @return $this
      */
     public function setCdnManager(Auth $auth)
@@ -137,6 +139,7 @@ class QiniuAdapter extends AbstractAdapter
 
     /**
      * bucket
+     *
      * @return string
      */
     public function getBucket()
@@ -171,7 +174,7 @@ class QiniuAdapter extends AbstractAdapter
     public function write($path, $contents, Config $config)
     {
         $params = $config->get('params', null);
-        $mime = $config->get('mime', 'application/octet-stream');
+        $mime   = $config->get('mime', 'application/octet-stream');
 
         $uploadToken = $this->getUploadToken($path);
         list($response, $error) = $this->getUploadManager()->put($uploadToken, $path, $contents, $params, $mime, true);
@@ -188,7 +191,7 @@ class QiniuAdapter extends AbstractAdapter
      *
      * @param string   $path
      * @param resource $resource
-     * @param Config   $config   Config object
+     * @param Config   $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
@@ -204,7 +207,7 @@ class QiniuAdapter extends AbstractAdapter
      *
      * @param string $path
      * @param string $contents
-     * @param Config $config   Config object
+     * @param Config $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
@@ -219,7 +222,7 @@ class QiniuAdapter extends AbstractAdapter
      *
      * @param string   $path
      * @param resource $resource
-     * @param Config   $config   Config object
+     * @param Config   $config Config object
      *
      * @return array|false false on failure file meta data on success
      */
@@ -239,7 +242,7 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function rename($path, $new_path)
     {
-       $error = $this->getBucketManager()->move($this->bucket, $path, $this->bucket, $new_path);
+        $error = $this->getBucketManager()->move($this->bucket, $path, $this->bucket, $new_path);
         if ($error !== null) {
             $this->logError(__FUNCTION__, $error);
             return false;
@@ -258,7 +261,7 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function copy($path, $new_path)
     {
-       $error = $this->getBucketManager()->copy($this->bucket, $path, $this->bucket, $new_path);
+        $error = $this->getBucketManager()->copy($this->bucket, $path, $this->bucket, $new_path);
         if ($error !== null) {
             $this->logError(__FUNCTION__, $error);
             return false;
@@ -288,6 +291,7 @@ class QiniuAdapter extends AbstractAdapter
 
     /**
      * @param string $dirname
+     *
      * @return bool
      */
     public function deleteDir($dirname)
@@ -399,8 +403,9 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getSize($path)
     {
-        if( $object = $this->getMetadata($path))
+        if ($object = $this->getMetadata($path)) {
             return ['size' => $object['fsize']];
+        }
 
         return false;
     }
@@ -414,8 +419,9 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getMimetype($path)
     {
-        if( $object = $this->getMetadata($path))
+        if ($object = $this->getMetadata($path)) {
             return ['size' => $object['mimeType']];
+        }
 
         return false;
     }
@@ -429,45 +435,51 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getTimestamp($path)
     {
-        if( $object = $this->getMetadata($path))
+        if ($object = $this->getMetadata($path)) {
             return ['timestamp' => $object['putTime']];
+        }
 
         return false;
     }
 
     /**
      * @DriverFunction
+     *
      * @param mixed $path
+     *
      * @return string
      */
     public function getUrl($path)
     {
-        return ( $this->ssl ? 'https://' : 'http://' ) . $this->cdnDomain  . '/' . ltrim($path, '/');
+        return ($this->ssl ? 'https://' : 'http://') . $this->cdnDomain . '/' . ltrim($path, '/');
     }
 
     /**
      * @DriverFunction
-     * @param $path
+     *
+     * @param     $path
      * @param int $expiration
+     *
      * @return string
      */
     public function getTemporaryUrl($path, $expiration = 3600)
     {
         $url = $this->getUrl($path);
 
-        if($expiration instanceof Carbon){
+        if ($expiration instanceof Carbon) {
             $expiration = $expiration->diffInSeconds(Carbon::now());
         }
 
         $expiration = intval($expiration);
-        return  $this->authManager->privateDownloadUrl($url, $expiration);
+        return $this->authManager->privateDownloadUrl($url, $expiration);
     }
 
     /**
-     * @param $fun string function name : __FUNCTION__
+     * @param       $fun string function name : __FUNCTION__
      * @param Error $error
      */
-    protected function logError($fun,Error $error){
-        Log::error($fun . ": FAILED => ". $error->code() . ' ' . $error->message());
+    protected function logError($fun, Error $error)
+    {
+        Log::error($fun . ": FAILED => " . $error->code() . ' ' . $error->message());
     }
 }

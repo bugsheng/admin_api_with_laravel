@@ -16,7 +16,9 @@ interface UpdateInfoInterface
 
     /**
      * 更新用户信息入库前验证
+     *
      * @param $data
+     *
      * @return mixed
      */
     public function updateInfo($data);

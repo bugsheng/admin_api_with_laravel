@@ -16,21 +16,24 @@ use Illuminate\Http\Request;
 /**
  * @version v1
  */
-Route::prefix('v1')->namespace('Personal\Controllers')->middleware(['check.token:admin','auth:admin'])->group(function () {
+Route::prefix('v1')
+    ->namespace('Personal\Controllers')
+    ->middleware(['check.token:admin', 'auth:admin'])
+    ->group(function () {
 
-    Route::prefix('personal')->group(function(){
-        /*获取当前登录用户信息*/
-        Route::get('/info','PersonalController@info');
+        Route::prefix('personal')->group(function () {
+            /*获取当前登录用户信息*/
+            Route::get('/info', 'PersonalController@info');
 
-        /*更新用户信息*/
-        Route::patch('/info', 'PersonalController@updateInfo');
+            /*更新用户信息*/
+            Route::patch('/info', 'PersonalController@updateInfo');
 
-        /*更新用户登录密码*/
-        Route::patch('/password', 'PersonalController@updatePassword');
+            /*更新用户登录密码*/
+            Route::patch('/password', 'PersonalController@updatePassword');
 
-        /*更新用户头像*/
-        Route::put('/avatar', 'PersonalController@updateAvatar');
+            /*更新用户头像*/
+            Route::put('/avatar', 'PersonalController@updateAvatar');
+
+        });
 
     });
-
-});

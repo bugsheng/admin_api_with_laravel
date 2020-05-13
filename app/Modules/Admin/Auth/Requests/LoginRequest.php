@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * 登录请求表单验证
  * Class LoginRequest
+ *
  * @package App\Http\Requests
  */
 class LoginRequest extends FormRequest
@@ -29,8 +30,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'username'  => 'required',
-            'password'  => 'required|string|min:6',
+            'username' => 'required',
+            'password' => 'required|string|min:6',
         ];
     }
 

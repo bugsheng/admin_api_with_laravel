@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 /**
  * Class StorageController
+ *
  * @package App\Http\Controllers
  */
 class StorageController extends Controller
@@ -20,6 +21,7 @@ class StorageController extends Controller
 
     /**
      * CurrentUserController constructor.
+     *
      * @param StorageService $storageService
      */
     public function __construct(StorageService $storageService)
@@ -28,9 +30,10 @@ class StorageController extends Controller
     }
 
     //获取token
-    public function getToken(Request $request){
+    public function getToken(Request $request)
+    {
 
-        $type = $request->get('type','public');
+        $type = $request->get('type', 'public');
 
         $result = $this->storageService->getStoreFileToken($type);
 
@@ -42,18 +45,19 @@ class StorageController extends Controller
     }
 
     //存储本地文件
-    public function storeLocalFile(StoreUploadFileRequest $request){
+    public function storeLocalFile(StoreUploadFileRequest $request)
+    {
 
-        $path = $request->get('file_path','');
+        $path = $request->get('file_path', '');
         $file = $request->file('file');
 
-        if(is_array($file)){
+        if (is_array($file)) {
             $result = $this->storageService->storeLocalFiles($path, $file);
-        }else{
+        } else {
             $result = $this->storageService->storeLocalFile($path, $file);
         }
 
-        if(!$result['status']){
+        if (!$result['status']) {
             return $this->failed('文件上传失败');
         }
 
@@ -64,18 +68,19 @@ class StorageController extends Controller
     }
 
     //存储阿里云文件
-    public function storeAliOssFile(StoreUploadFileRequest $request){
+    public function storeAliOssFile(StoreUploadFileRequest $request)
+    {
 
-        $path = $request->get('file_path','');
+        $path = $request->get('file_path', '');
         $file = $request->file('file');
 
-        if(is_array($file)){
+        if (is_array($file)) {
             $result = $this->storageService->storeAliOssFiles($path, $file, false);
-        }else{
+        } else {
             $result = $this->storageService->storeAliOssFile($path, $file, false);
         }
 
-        if(!$result['status']){
+        if (!$result['status']) {
             return $this->failed('文件上传失败');
         }
 
@@ -86,17 +91,18 @@ class StorageController extends Controller
     }
 
     //存储七牛文件
-    public function storeQiniuFile(StoreUploadFileRequest $request){
-        $path = $request->get('file_path','');
+    public function storeQiniuFile(StoreUploadFileRequest $request)
+    {
+        $path = $request->get('file_path', '');
         $file = $request->file('file');
 
-        if(is_array($file)){
+        if (is_array($file)) {
             $result = $this->storageService->storeQiniuFiles($path, $file, false);
-        }else{
+        } else {
             $result = $this->storageService->storeQiniuFile($path, $file, false);
         }
 
-        if(!$result['status']){
+        if (!$result['status']) {
             return $this->failed('文件上传失败');
         }
 

@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response as FoundationResponse;
 /**
  * 后台管理鉴权控制器
  * Class AuthController
+ *
  * @package App\Http\Controllers\Api
  */
 class AuthController extends Controller
@@ -31,6 +32,7 @@ class AuthController extends Controller
 
     /**
      * AuthController constructor.
+     *
      * @param AuthService $authService
      */
     public function __construct(AuthService $authService)
@@ -40,7 +42,9 @@ class AuthController extends Controller
 
     /**
      * 用户登录
+     *
      * @param LoginRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(LoginRequest $request)
@@ -60,7 +64,7 @@ class AuthController extends Controller
         $loginResult = $this->authService->login($login_name, $login_password);
 
         //登录失败，提示信息
-        if(!$loginResult['status']) {
+        if (!$loginResult['status']) {
             return $this->failed($loginResult['message']);
         }
 
@@ -75,18 +79,21 @@ class AuthController extends Controller
 
     /**
      * 刷新令牌
+     *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refreshToken(Request $request){
+    public function refreshToken(Request $request)
+    {
 
-        $refresh_token = $request->post('refresh_token','');
+        $refresh_token = $request->post('refresh_token', '');
 
         //处理刷新token
         $refreshResult = $this->authService->refreshToken($refresh_token);
 
         //刷新失败，提示信息
-        if(!$refreshResult['status']) {
+        if (!$refreshResult['status']) {
             return $this->failed($refreshResult['message']);
         }
 
@@ -100,6 +107,7 @@ class AuthController extends Controller
 
     /**
      * 用户登出
+     *
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */

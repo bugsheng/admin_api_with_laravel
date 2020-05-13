@@ -15,6 +15,7 @@ use App\Repositories\Interfaces\UserInterface;
 /**
  * 用户基础数据操作仓库
  * Class CurrentUserRepository
+ *
  * @package App\Repositories
  */
 class UserRepository implements UserInterface
@@ -27,6 +28,7 @@ class UserRepository implements UserInterface
 
     /**
      * AuthRepository constructor.
+     *
      * @param User $user
      */
     public function __construct(User $user)
@@ -36,29 +38,39 @@ class UserRepository implements UserInterface
 
     /**
      * 查询所有用户
+     *
      * @param array $columns
-     * @param bool $withTrash
+     * @param bool  $withTrash
+     *
      * @return mixed|void
      */
-    public function all($columns = array('*'), $withTrash = false){
+    public function all($columns = ['*'], $withTrash = false)
+    {
 
     }
 
     /**
      * 分页查询所有用户
-     * @param int $perPage
+     *
+     * @param int   $perPage
      * @param array $columns
-     * @param bool $withTrash
+     * @param bool  $withTrash
+     *
      * @return mixed|void
      */
-    public function paginate($perPage = 15, $columns = array('*'), $withTrash = false){}
+    public function paginate($perPage = 15, $columns = ['*'], $withTrash = false)
+    {
+    }
 
     /**
      * 新增用户
+     *
      * @param array $data
+     *
      * @return bool|mixed
      */
-    public function create(array $data){
+    public function create(array $data)
+    {
 
         $result = $this->user->fill($data)->save();
         return $result;
@@ -66,13 +78,16 @@ class UserRepository implements UserInterface
 
     /**
      * 更新用户数据
+     *
      * @param array $data
-     * @param User $user
+     * @param User  $user
+     *
      * @return bool|mixed
      */
-    public function update(array $data, $user){
+    public function update(array $data, $user)
+    {
 
-        foreach($data as $key => $value){
+        foreach ($data as $key => $value) {
             $user->$key = $value;
         }
 
@@ -83,16 +98,19 @@ class UserRepository implements UserInterface
 
     /**
      * 通过主键删除用户
-     * @param $ids
+     *
+     * @param      $ids
      * @param bool $withTrash
+     *
      * @return bool|int|mixed|null
      */
-    public function delete($ids, $withTrash = false){
+    public function delete($ids, $withTrash = false)
+    {
 
         $ids = is_array($ids) ? $ids : func_get_args();
-        if($withTrash){
+        if ($withTrash) {
             $result = $this->user->withTrashed()->whereIn('id', $ids)->forceDelete();
-        }else{
+        } else {
             $result = $this->user->withTrashed()->destroy($ids);
         }
 
@@ -101,43 +119,52 @@ class UserRepository implements UserInterface
 
     /**
      * 恢复软删除用户数据
+     *
      * @param $id
+     *
      * @return mixed|void
      */
-    public function restore($id){
+    public function restore($id)
+    {
         $this->user->withTrashed()->where('id', '=', $id)->restore();
     }
 
     /**
      * 根据主键id获取指定用户
-     * @param $id
+     *
+     * @param       $id
      * @param array $columns
-     * @param bool $withTrash
+     * @param bool  $withTrash
+     *
      * @return mixed
      */
-    public function find($id, $columns = array('*'), $withTrash = false){
+    public function find($id, $columns = ['*'], $withTrash = false)
+    {
         $query = $this->user;
-        if($withTrash){
+        if ($withTrash) {
             $query->withTrashed();
         }
-        $user = $query->where('id','=', $id)->first($columns);
+        $user = $query->where('id', '=', $id)->first($columns);
         return $user;
     }
 
     /**
      * 根据单个属性获取相应用户数据集合
-     * @param $field
-     * @param $value
+     *
+     * @param       $field
+     * @param       $value
      * @param array $columns
-     * @param bool $withTrash
+     * @param bool  $withTrash
+     *
      * @return mixed
      */
-    public function findBy($field, $value, $columns = array('*'), $withTrash = false){
+    public function findBy($field, $value, $columns = ['*'], $withTrash = false)
+    {
         $query = $this->user;
-        if($withTrash){
+        if ($withTrash) {
             $query->withTrashed();
         }
-        $users = $query->where($field,'=', $value)->get($columns);
+        $users = $query->where($field, '=', $value)->get($columns);
 
         return $users;
     }

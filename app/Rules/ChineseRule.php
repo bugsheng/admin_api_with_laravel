@@ -13,6 +13,7 @@ use Illuminate\Contracts\Validation\Rule;
 /**
  * 汉字姓名验证规则
  * Class ChineseRule
+ *
  * @package App\Rules
  */
 class ChineseRule implements Rule
@@ -21,8 +22,9 @@ class ChineseRule implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
+     * @param  string $attribute
      * @param  mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)

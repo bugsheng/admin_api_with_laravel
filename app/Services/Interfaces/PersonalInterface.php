@@ -14,6 +14,7 @@ interface PersonalInterface
 
     /**
      * 获取当前用户
+     *
      * @return mixed
      */
     public function getInfo();

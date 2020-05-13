@@ -11,6 +11,7 @@ namespace App\Traits;
 /**
  * 基础标准调用返回Trait
  * Trait BaseResponseTrait
+ *
  * @package App\Traits
  */
 trait BaseResponseTrait

@@ -8,6 +8,7 @@ use Laravel\Passport\Events\RefreshTokenCreated;
 /**
  * 用于清除旧的refresh_token
  * Class PruneOldTokens
+ *
  * @package App\Listeners
  */
 class PruneOldTokens
@@ -25,7 +26,8 @@ class PruneOldTokens
     /**
      * Handle the event.
      *
-     * @param  RefreshTokenCreated  $event
+     * @param  RefreshTokenCreated $event
+     *
      * @return void
      */
     public function handle(RefreshTokenCreated $event)

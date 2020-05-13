@@ -17,12 +17,14 @@ class Validate
     use BaseResponseTrait;
 
     /**
-     * @param $data
+     * @param       $data
      * @param array $rules
      * @param array $message
+     *
      * @return bool|string
      */
-    protected function validate($data, $rules = [], $message = []){
+    protected function validate($data, $rules = [], $message = [])
+    {
 
         $validator = Validator::make($data, $rules, $message);
         if ($validator->fails()) {
