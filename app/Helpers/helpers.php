@@ -1140,7 +1140,8 @@ if (!function_exists('sort_by_key')) {
             $sort_type = SORT_DESC;
         }
 
-        array_multisort(array_column($arr, $key), $sort_type, $arr);
+        $array_column = array_column($arr, $key);
+        array_multisort($array_column, $sort_type, $arr);
         return $arr;
     }
 }
@@ -1162,3 +1163,231 @@ if (!function_exists('sort_by_key_desc')) {
     }
 }
 
+if (!function_exists('formatNumberWithWan')) {
+    /**
+     * 格式化数字 过万显示单位w 保留两位小数
+     *
+     * @param $v
+     * @param $wan_decimals
+     * @param $decimals
+     * @param $unit
+     *
+     * @return string
+     */
+    function formatNumberWithWan($v, $wan_decimals = 2, $decimals = 2, $unit = 'w')
+    {
+        return $v > 10000 || $v < -10000 ? (sprintf('%.' . $wan_decimals . 'f',
+                $v * 1 / 10000) . $unit) : sprintf('%.' . $decimals . 'f', $v * 1);
+    }
+}
+
+if (!function_exists('calculateGrowthRate')) {
+    /**
+     * @param float|int $new
+     * @param float|int $old
+     *
+     * @return float|int|null
+     */
+    function calculateGrowthRate($new, $old)
+    {
+        return $old == 0 ? null : (($new - $old) / $old * 100);
+    }
+}
+
+if (!function_exists('formatGrowthRate')) {
+    /**
+     * 格式化
+     *
+     * @param $rate
+     *
+     * @return string
+     */
+    function formatGrowthRate($rate)
+    {
+        if ($rate === null) {
+            return '-';
+        }
+        return sprintf('%.2f', $rate * 1) . ($rate > 0 ? '% ↑' : ($rate < 0 ? '% ↓' : '%'));
+    }
+}
+
+if (!function_exists('getDivideInteger')) {
+    /**
+     * 均分正整数为多份
+     *
+     * @param int $number 要均分的正整数 或 0
+     * @param int $total  均分的份数
+     *
+     * @return array|false|string[]
+     */
+    function getDivideInteger(int $number, int $total)
+    {
+        if ($number < 0 || $total <= 0) {
+            return false;
+        }
+
+        // 平均整数
+        $per = intval($number / $total);
+        // 余数
+        $rest = $number % $total;
+
+        // 余数均分
+
+        $number_str = str_repeat(($per + 1) . ',', $rest) . str_repeat($per . ',', $total - $rest - 1) . $per;
+        return explode(',', $number_str);
+    }
+
+}
+
+if(!function_exists('arrayLevel')) {
+    /**
+     * 获取数组维度
+     *
+     * @param array $arr
+     *
+     * @return mixed
+     */
+    function arrayLevel(array $arr){
+        $al = [0];
+        function aL($arr,&$al,$level=0){
+            if(is_array($arr)){
+                $level++;
+                $al[] = $level;
+                foreach($arr as $v){
+                    aL($v,$al,$level);
+                }
+            }
+        }
+        aL($arr,$al);
+        return max($al);
+    }
+
+}
+
+if (!function_exists('multiCollectIntersect')) {
+    /**
+     * 二维数组集合交集（返回第一个集合中的交集数据）
+     *
+     * @param \Illuminate\Support\Collection $collect1
+     * @param \Illuminate\Support\Collection $collect2
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    function multiCollectIntersect(\Illuminate\Support\Collection $collect1, \Illuminate\Support\Collection $collect2)
+    {
+
+        if ($collect1->count() == 0 || $collect2->count() == 0) {
+            return collect([]);
+        }
+
+        return $collect1->filter(function ($v) use ($collect2) {
+            foreach ($collect2 as $key => $val) {
+                if (count(array_intersect_assoc($val, $v)) > 0) {
+                    return true;
+                }
+            }
+            return false;
+        });
+
+    }
+
+}
+
+if (!function_exists('multiCollectDiff')) {
+    /**
+     * 二维数组集合差集（返回第一个集合中的差集数据）
+     *
+     * @param \Illuminate\Support\Collection $collect1
+     * @param \Illuminate\Support\Collection $collect2
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    function multiCollectDiff(\Illuminate\Support\Collection $collect1, \Illuminate\Support\Collection $collect2)
+    {
+
+        if ($collect1->count() == 0 || $collect2->count() == 0) {
+            return collect([]);
+        }
+
+        return $collect1->filter(function ($v) use ($collect2) {
+            foreach ($collect2 as $key => $val) {
+                if (count(array_intersect_assoc($val, $v)) > 0) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+    }
+
+}
+
+if (!function_exists('multiArrayIntersect')) {
+    /**
+     * 二维数组差集（返回第一个数组中的差集数据）
+     *
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     */
+    function multiArrayIntersect(array $array1, array $array2)
+    {
+        if (count($array1) == 0 || count($array1) == 0) {
+            return [];
+        }
+
+        return array_filter($array1, function ($v) use ($array2) {
+            foreach ($array2 as $key => $val) {
+                if (count(array_intersect_assoc($val, $v)) > 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    }
+}
+
+if (!function_exists('multiArrayDiff')) {
+    /**
+     * 二维数组差集（返回第一个数组中的差集数据）
+     *
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     */
+    function multiArrayDiff(array $array1, array $array2)
+    {
+        if (count($array1) == 0 || count($array1) == 0) {
+            return [];
+        }
+
+        $arr1Level = arrayLevel($array1);
+        $arr2Level = arrayLevel($array2);
+        if($arr1Level != $arr2Level) {
+            return [];
+        }
+
+        if($arr1Level == 1) {
+            if(is_assoc($array1) && is_assoc($array2)) {
+                return array_diff($array1, $array2);
+            }
+            return array_diff_assoc($array1, $array2);
+        }
+
+        if($arr1Level == 2) {
+            return array_filter($array1, function ($v) use ($array2) {
+                foreach ($array2 as $key => $val) {
+                    if (count(array_intersect_assoc($val, $v)) > 0) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+
+    }
+}
